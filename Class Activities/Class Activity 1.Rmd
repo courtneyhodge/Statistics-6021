@@ -1,0 +1,58 @@
+---
+title: "Class Activity 1"
+author: "Courtney Hodge"
+date: "2024-07-16"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+OurData <- read.csv("C:\\Users\\hodge\\Downloads\\ClassData.csv")
+
+head(OurData)
+```
+
+```{r}
+OurData2 <-OurData |> mutate(Slp = as.numeric(Sleep_Hrs))
+
+OurData2 <- OurData2 |> mutate(Phone_Hrs = as.numeric(Phone_Time))
+
+head(OurData2)
+```
+
+```{r}
+ggplot(OurData2, aes(x = Phone_Time, y = Slp)) + geom_point()
+
+```
+> No, there does not appear to be a linear relationship between the number of hours spent on phone and sleep Hrs.
+
+```{r}
+t.test(OurData2$Phone_Hrs)
+```
+
+```{r}
+mean_calc <- function(x){
+  return(mean(x, na.rm = T))
+}
+
+#replicate is done 10,000 times
+bootstrap_means <- replicate(10000, {
+  bootstraped_data <- sample(OurData2$Phone_Hrs, replace = T)
+  mean_calc(bootstraped_data)
+})
+
+bootstrap_df <- data.frame(bootstrap_means)
+
+#normal dist of boostrap df
+ggplot(bootstrap_df, aes(x = bootstrap_means)) +
+  geom_density()
+```
+
+```{r}
+quantile(bootstrap_means, c(0.025, 0.975))
+```
+> We are 95% confident that the average number of hours all UVA graduate students spend on their phone per day falls between (3.72, 4.53)
+

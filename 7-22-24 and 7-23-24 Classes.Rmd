@@ -1,0 +1,332 @@
+---
+title: "7-22-24 and 7-23-24 Classes"
+author: "Courtney Hodge"
+date: "2024-07-22"
+output: html_document
+---
+
+```{r}
+Startups <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\Startups.csv")
+```
+
+```{r}
+library(tidyverse)
+```
+
+#Parameter Estimation
+
+## Simple Lienar Regression
+
+### Least Squares
+> Below, we are doing a Least Squares parameter estimation
+
+```{r}
+ggplot(Startups, aes(x=R.D.Spend, y = Profit)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+```
+> Here, we can find the y-intercept of the line and the cooresponding slope coefficient of each line
+
+```{r}
+model_1 <- lm(Profit~R.D.Spend, data = Startups)
+coef(model_1)
+```
+### Boostrapping
+>below, we are bootstrapping. The sample() function randomly chooses a sample of size nrow(dataset), which counts the
+> number of rows in the dataset for me.
+> IN ORDER TO DO THIS MANY TIMES, USE **REPLICATE**
+
+
+```{r}
+Bootstrap_estimates <- replicate(1000,{
+  bootstrap_samples <- Startups[sample(1:nrow(Startups), nrow(Startups), replace = T),]
+
+  #for each of the models, apply the linear models
+  boostrap_models <-lm(Profit~R.D.Spend, data = bootstrap_samples)
+  
+  coef(boostrap_models)
+  
+})
+```
+
+> now, I want to make a linear model with each of these lines. using geom_abline draws 
+> the slopes for each y-intercept, slope pair.
+
+```{r}
+estimates <- data.frame(t(Bootstrap_estimates))
+
+ggplot(Startups, aes(x=R.D.Spend, y = Profit)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F, color = 'red') + 
+  geom_abline(data = estimates, aes(intercept = X.Intercept., slope = R.D.Spend), color = 'magenta')
+```
+> In order to find our bootstrap estimate, we need to average the y-intercept and slope value.
+
+```{r}
+summarize(estimates, mean_b0 = mean(X.Intercept.), mean_b1 = mean(R.D.Spend))
+```
+
+```{r}
+coef(model_1)
+```
+> Above, we are also comparing it to the Least Squares model
+
+## Multiple Linear Regression
+> Now the question is how do you find a Multiple Linear Regression Model from these  
+
+```{r}
+model_2 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+
+coef(model_2)
+```
+
+## General Least Squares Estimates
+
+```{r}
+X <- cbind(1, Startups$R.D.Spend, Startups$Administration, Startups$Marketing.Spend)
+
+XtX <- t(X) %*%X
+
+inverse_XtX <- solve(XtX)
+
+Xty <- t(X)%*%Startups$Profit
+```
+
+```{r}
+beta <- inverse_XtX%*%Xty
+```
+
+# Model Assumptions
+```{r}
+library(tidyr)
+```
+
+
+```{r}
+Startups2 <- gather(Startups, key = "predictor", value = "value",
+                    R.D.Spend, Administration, Marketing.Spend)
+```
+
+---
+# 7-23-24 Class
+
+## Model Assumptions Cont.
+
+### Facet Wrap
+
+> Why are we doing this? We are just beginning with EDA so that we can see the 
+> relationship between the variables. This gives us an idea of the results later on. 
+
+```{r}
+long <- gather(Startups, key = "predictor", value = "value",
+               R.D.Spend, Administration, Marketing.Spend)
+
+ggplot(long, aes(x = value, y = Profit, color = predictor)) + geom_point() +
+  facet_wrap(~predictor, scales = "free_x")
+```
+### Building Multiple Regression Model
+
+```{r}
+model1 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, 
+             data = Startups)
+
+coef(model1)
+```
+
+> y hat has been created as model1
+
+#### Linearity Assumption (Independence & Equal Variance Assumptions )
+
+```{r}
+Startups_pred <- mutate(Startups, predictions = fitted(model1), 
+                        resid = residuals(model1)) 
+
+ggplot(Startups_pred, aes(x = predictions, y = resid)) +
+  geom_point() + geom_hline(yintercept = 0, color = "orange")
+```
+
+#### Normal Popualtion Assumption
+
+>this code will check if the norm assumption is met
+
+> Because the residuals are really close to the line, we can assume that the normal assumption is met
+> and that the sample data is noramlly distributed.
+
+```{r}
+ggplot(Startups_pred, aes(sample = resid)) +
+  stat_qq() +
+  stat_qq_line( color = "yellow")
+```
+
+# What Happens when one or more Assumptions fails?
+
+```{r}
+planets <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\PlanetsData.csv")
+```
+
+```{r}
+ggplot(planets, aes(x = distance, y = revolution)) + 
+  geom_point() + geom_smooth(method = "lm", se = F, color = "cyan")
+```
+```{r}
+model2 <- lm(revolution~distance, data = planets)
+coef(model2)
+```
+
+```{r}
+planet_pred <- mutate(planets, pred=fitted(model2), resid=residuals(model2))
+```
+
+```{r}
+#residual plot
+ggplot(planet_pred, aes(x=pred, y=resid)) + 
+  geom_point() +
+  geom_hline(yintercept = 0, color = "darkgoldenrod1")
+```
+```{r}
+ggplot(planet_pred, aes(sample = resid)) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+> SO, what do you do, you do a variable transformation by doing a log transformation.
+
+```{r}
+planets2 <- mutate(planets, log_dist = log(distance), log_rev=log(revolution))
+```
+
+```{r}
+ggplot(planets2, aes(x=log_dist, y=log_rev)) +
+  geom_point()
+```
+
+```{r}
+model3 <- lm(log_rev~log_dist, data=planets2)
+coef(model3)
+```
+```{r}
+planet_pred2 <- mutate(planets2, pred=fitted(model3), resid=residuals(model3))
+
+ggplot(planet_pred2, aes(x=pred, y=resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = 'brown1')
+```
+---
+
+7/24/24
+
+```{r}
+model1 <- lm(Profit~R.D.Spend, data = Startups)
+coef(model1)
+```
+# Predictions
+> below, we are making two predicitons and these are the values that we created with the R.D.Spend
+
+```{r}
+new_dat <- data.frame(R.D.Spend = c(165349.20, 500000))
+
+predict(model1, newdata = new_dat)
+```
+```{r}
+predict(model1, newdata = new_dat, interval = "prediction", level = 0.95)
+```
+
+> The intervals above are more meaningful to employers and the prediction intervals capture the Profit value in the Startups table.
+
+> "prediction" interval is a prediction on a model for a particular observation. 
+
+```{r}
+predict(model1, newdata = new_dat, interval = "confidence", level = 0.95)
+```
+> "confidence" predicts the mean on average of a company's profit and this is more precise and narrower.
+
+> "confidence" interval is a prediction for a many groups, aka the average
+
+## How do you make predictions when the data is transformed?
+
+```{r}
+planets <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\PlanetsData.csv")
+```
+
+```{r}
+model3 <- lm(log_rev~log_dist, data=planets2)
+coef(model3)
+```
+
+
+> In order to do this, you'll have to take the log of Earth's distance and multiply it out
+
+```{r}
+log_rev = -0.9031235 + 1.5013054*log(93)
+```
+
+> then, to go backwards, you have to take the exponentiation of the answer to get the days.
+
+```{r}
+exp(log_rev)
+```
+
+```{r}
+new <- data.frame(log_dist = log(93))
+predict(model3, new)
+```
+> The prediction above is our fitted value. 
+
+
+```{r}
+ predict(model3, new, interval = "prediction")
+```
+
+> to make a prediction for the number of days for earth to revolve around the sun, we can take the exp() for the upper and lower bounds of the prediction interval.
+
+```{r}
+exp(5.886647)
+exp(5.916739)
+```
+> so, we know that 365 does in fact fall within this interval.
+
+
+```{r}
+Avg_profit <- mean(Startups$Profit)
+ggplot(Startups, aes(x = R.D.Spend, y = Profit)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = F) +
+  geom_hline(yintercept = Avg_profit, color = "red")
+```
+
+```{r}
+summary(model1,)
+```
+
+## More on the Independent Assumption
+> Multicollinearity may be tested with three central criteria
+1. Correlation matrix - correlation coefficients for pairwise comparisons between predictors ashould ideally be below 0.80
+It brings the covariance between 1 and -1. Basically standardizes the covariance matrix
+2. Covariance matrix - also known as variance matrix, also shows pairwise comparisons between predictors
+
+### Covariance matrix
+```{r}
+Startups2 <- Startups[,-4]
+cor_matrix <-round(cor(Startups2),2)
+cor_matrix
+```
+
+```{r}
+library(ggcorrplot)
+```
+
+```{r}
+ggcorrplot(cor_matrix, lab = T)
+```
+
+> Tolerance - the tolerance measures the influence of one predictor variable on all other predictor vairables. TOlerance is defined as T=1-R^2 for the first step regression analysis. If T<0.1 there might be multicollinearity issues and with T <0.01 there certainly is multicolinearity.
+
+```{r}
+model10 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+```
+
+```{r}
+vif(model10)
+```
+
+> drop the variable 

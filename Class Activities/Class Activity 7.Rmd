@@ -1,0 +1,69 @@
+---
+title: "Class Activity 7"
+author: "Courtney Hodge"
+date: "2024-07-24"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+life_data <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\expectancy.csv")
+```
+
+```{r}
+life_data3<-select(life_data,Life.expectancy, Adult.Mortality,
+infant.deaths,HIV.AIDS,BMI, GDP,Schooling)%>%
+na.omit()
+```
+
+
+# 1
+
+```{r}
+long <- gather(life_data3, key = "predictor", value = "value",
+               Adult.Mortality, infant.deaths, HIV.AIDS, BMI, GDP, Schooling)
+
+ggplot(long, aes(x = value, y = Life.expectancy, color = predictor)) + geom_point() +
+  facet_wrap(~predictor, scales = "free_x")
+```
+
+> I believe that a linear model would be appropriate for Adult.Mortality, Schooling, and infant.deaths (vertical linear model). I believe that with a transformation, GDP, HIV.AIDS, and to an extent, BMI, could be used in a linear model.
+
+# 2
+```{r}
+model1 <- lm(Life.expectancy~Adult.Mortality + BMI + GDP + HIV.AIDS + infant.deaths + Schooling, 
+             data = life_data3)
+
+coef(model1)
+```
+> Residual Plot
+> Verifies the Independence Assumption
+
+
+```{r}
+model1_pred <- mutate(life_data3, predictions = fitted(model1), 
+                        resid = residuals(model1)) 
+
+ggplot(model1_pred, aes(x = predictions, y = resid)) +
+  geom_point() + geom_hline(yintercept = 0, color = "orange")
+```
+> Normal Pop Assumption
+
+> verifies normality and linear assumption
+
+```{r}
+ggplot(model1_pred, aes(sample = resid)) +
+  stat_qq() +
+  stat_qq_line( color = "yellow")
+```
+
+> Based on the randomness and independence of the points plotted in the Residuals graph, and the Equal Variance and Normality of the points presented in the Normal Pop Assumption graph, there is enough evidence that supprots that the multiple regression model meets all the linear regression assumptions.
+
+# 3
+```{r}
+summary(life_data3)
+```
+> All of these variables could all use some transforation of some kind, but it is really evident for variables like infant.deaths, HIV.AIDS, and GDP based on how drastically different their median and means are from each other. On second glance, I would consider Adult.Mortality to need transforming as well becasue of the gap between the 3rd and first quartile, which indicates outliers. BMI would need transformations too because of the min value being an outlier compared to the other distributions. Laslty, Schooling could use some transforming becuase the min value is is slightly less than the median value and that indicates slight skewness. 
+

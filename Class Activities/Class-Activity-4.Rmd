@@ -1,0 +1,79 @@
+---
+title: "Class Activity 4"
+author: "Courtney Hodge"
+date: "2024-07-19"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+## Startups Data
+```{r}
+BookData <- read.csv("C:\\Users\\hodge\\Downloads\\Books_Data_Clean.csv")
+
+```
+
+```{r}
+ggplot(BookData, aes(x = Author_Rating, y = gross.sales, fill = Author_Rating )) +
+  geom_boxplot()
+```
+> zooming into graph
+
+```{r}
+ggplot(BookData, aes(x = Author_Rating, y = gross.sales, fill = Author_Rating )) +
+  geom_boxplot() + ylim(0, 5000)
+```
+
+
+> Hypotheses
+
+H0: Mu A = Mu B = Mu C = Mu D
+HA: At least one of them are different
+
+```{r}
+anova <- aov(gross.sales~Author_Rating, data = BookData)
+
+summary(anova)
+```
+> Since our p-value of 3.03e-11 is incredibly small and less than 5%, then p-val < 0.05 means that we reject the null-hypothesis.
+
+> multiple hypothes testing
+
+MuFamous-MuExcellent
+
+MuIntermediate-MuExcellent 
+
+MuNovice-MuExcellent
+
+MuIntermediate-MuFamous
+
+MuNovice-MuFamous
+
+MuNovice-MuIntermediate 
+
+```{r}
+TukeyHSD(anova, conf.level = 0.95)
+```
+
+MuFamous-MuExcellent  --> - > + (inconclusive)
+
+MuIntermediate-MuExcellent -->  + > + 
+
+MuNovice-MuExcellent --> + > + 
+
+MuIntermediate-MuFamous --> - > + (Incolcusive)
+
+MuNovice-MuFamous --> + > +
+
+MuNovice-MuIntermediate --> - > + (incolcusive)
+
+```{r}
+plot(TukeyHSD(anova, conf.level = 0.95))
+```
+
+> Based on the analysis above, it looks like drug A is the most effective drug in this experiment. we found that by looking at the lower and upper bounds and noticing that A is positive, but C and B are negative.
+
+> We have enough statistical evidence to conclude that the mean pain rating for Drug A is much lower than Drugs B and C. Becuase this is an experiment, Drug A is more effective in treating migraine headaches compared to Drugs B and C

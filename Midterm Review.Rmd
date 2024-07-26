@@ -1,0 +1,768 @@
+---
+title: "Midterm Review"
+author: "Courtney Hodge"
+date: "2024-07-26"
+output: html_document
+---
+
+July 16th, 17th, 18th, 19th, 22nd, 23rd, 24th, and 25th
+
+## 7/16/24
+
+  Bootstrapping, Testing Hypothesis about Proportions
+
+```{r}
+Classdata <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\ClassData.csv")
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+OurData5 <-Classdata |> mutate(sleep = as.numeric(Sleep_Hrs))
+
+```
+
+```{r}
+#defaults to 95% CI
+t.test(OurData5$sleep)
+```
+
+### Bootstrapping
+```{r}
+mean_calc <- function(x){
+  
+  return(mean(x, na.rm = T))
+}
+
+#replicate is done 10,000 times
+bootstrap_means <- replicate(10000, {
+  bootstraped_data <- sample(OurData5$sleep, replace = T)
+  mean_calc(bootstraped_data)
+})
+
+bootstrap_df <- data.frame(bootstrap_means)
+
+#normal dist of boostrap df
+ggplot(bootstrap_df, aes(x = bootstrap_means)) +
+  geom_density()
+```
+```{r}
+quantile(bootstrap_means, c(0.025, 0.975))
+#95% confidence interval is (6.969,7.298) <- note that this will change with each run
+```
+
+### Testing Hypothesis about Proportions
+
+```{r}
+prop.test(40, 100, p = 0.85, alternative = "l")
+#our p value is very close to zero (2.2e-16). Since our p-value < 0.01 = alpha, you will reject the null hypothesis!
+
+#note, whenever your p-val < H0, you say that it is a statistically significant result
+```
+A final project group member tells you that all UVa students sleep for 6
+hours on average. Use students from this class as a random sample. Do
+you believe your classmate - test your conjecture that all UVa students
+sleep more than 6 hours on average? Test at α = 0.05.
+
+```{r}
+#default is 2 sided 
+t.test(OurData5$sleep, mu = 6, alternative = "g")
+```
+> We will reject the null because p val < alpha.
+
+
+```{r}
+#list the (successes, the sample size)
+#Slide pack 2, pg 8
+prop.test(c(7, 15), c(15, 19))
+#we are 95% confident that the proportion of customers who would select A over B is (-0.694, 0.04)
+
+# we can therefore not make a conclusion about this
+```
+```{r}
+nba_data <- read.csv("C:\\Users\\hodge\\Downloads\\nba.csv")
+```
+
+```{r}
+home_count <- count(nba_data, home_away)
+```
+
+
+# 7/17/24
+
+> Comparing Two Proportions, Comparing Two Means, Confidence Interval Paired Data, One Sample t-test, ANOVA: Comparing More than Two Means, Variance
+
+
+```{r}
+nba <- read.csv("C:\\Users\\hodge\\Downloads\\nba.csv")
+```
+
+### Comparing Two Proportions
+> Proportion 1: Away Game wins; Proportion 2: Home Game wins
+> We don't have info on these Population Proportions, but we do have samples Phat Away and Phat Home
+> If the confidence limit is both negative (-,-) (aka Phat A < Phat H ), bot positive (+,+) (aka Phat A > Phat H), you can make a conclusion. 
+
+>If (-,+), this is inconclusive.
+
+```{r}
+table(nba$W.L, nba$home_away)
+```
+> We know from the above that Phat A = 518/1230 and Phat H = 712/1230
+
+```{r}
+#first entry are successes, second entry is sample sizes
+prop.test(c(518, 712),c(1230, 1230))
+```
+
+> from the above, we get 95 percent confidence interval:
+ (-0.1975587, -0.1178885), which means that we are 95% confident that the proprotion of wins away is between 19.7% and 11.7% less than the **percentage points** of wins at home
+ 
+> The above says that we are 95% confident that the winning proportion for **all nba games** played away is between  -0.1975587 and -0.1178885 lower than when the games are played at home.
+ 
+> NOTE: you CAN do this the other way around
+
+```{r}
+#first entry are successes, second entry is sample sizes
+prop.test(c(712, 518),c(1230, 1230))
+```
+> The above says that we are 95% confident that the winning proportion for **all nba games** played at home is between  0.1178885 and 0.1975587 higher than when the games are played away.
+
+> This is the same conclusion!
+
+```{r}
+ggplot(nba, aes(x = home_away, fill = W.L)) +
+  geom_bar(position = "fill")
+```
+
+### Comparing Two Means
+
+Example: Average points won between home and away games
+
+> Here, we don't have mu Away and mu home (population means), but we do have sample means xbar away and xbar home.
+
+> we are interested in the 'PTS' attribute and we can use the 'home_away' attribute
+
+```{r}
+#here, we are putting the numerical variable first, followed by the categorical variable second
+t.test(PTS~home_away, data = nba)
+```
+> NOTE: we are using **t.test when our variable is numerical**. Here, our PTS variable is numerical. In the last example, we used a **proportion test on our categorical variable** for wins or losses (W.L)
+
+> above, we have the difference between the two variables. We see our confidence interval. We are 95% confident that the **average** number of points scored in **all nba games** home games are between 1.155093 and 3.056289 **points** higher than all away games.
+
+> let's make a box plot
+
+```{r}
+ggplot(nba, aes(x = home_away, y = PTS)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(nba, aes(x = home_away, y = PTS, fill = home_away)) +
+  geom_boxplot(outlier.color = "orange") + geom_jitter()
+```
+
+### Confidence Interval Paired Data
+
+```{r}
+Ourdata <- Classdata <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\ClassData.csv")
+
+```
+
+```{r}
+Ourdata2 <- mutate(Ourdata, Age_Diff = as.numeric(gsub("years", "",Age_Diff_Parents), Age_Diff = gsub("year", "",Age_Diff_Parents)))
+```
+
+```{r}
+Ourdata2[3,17] <- 1
+```
+
+### One Sample t test
+```{r}
+t.test(Ourdata2$Age_Diff)
+```
+> With the above, you have mu father - mu mother > 0
+> we are 95% confident that on **average**, all fathers are older by mothers by 2.9 years and 4.5 years.
+
+### ANOVA: Comparing More than Two Means
+Analysis of Variance = ANOVA
+
+> this sample are volunteers, not a random sample. If you want to make sure you are generalizing the entire US pop, make sure you take a random sample. 
+
+> We have populations A,B, and C. We have xbar a, xbar b, and xbar c. The goal is to be able to test if one of these drugs are more effective for migrane clinics
+
+> ANOVA is a Hypothesis Test. 
+
+Is there a difference in the mean pain level of the patients among the
+3 drug formulations?
+
+H0: MuA = MuB = MuC (No difference in the three drugs)
+HA: At least one of the population means is different.
+
+> The alternative doesn't tell you much, but at least one of the three here is different, says the Alternative Hypothesis.
+
+> There's something called a test statistic here, and i'ts called F-test. F-tests measure the variation between the three groups and the variation within the groups. for the three groups, F = MSB/MSW. If the variations = 1, then we don't have evidence to reject the null. If there are huge differences between them, we have evidence to reject the null.
+
+```{r}
+CT <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\Clinical_trial.csv")
+```
+
+```{r}
+ggplot(CT, aes(x = Drug, y = Pain_Rating, fill = Drug)) +
+  geom_violin() + geom_jitter()
+```
+
+> Based on the violin plots above, we can see that Drug A has a different pain_rating range than the others
+
+```{r}
+anova <- aov(Pain_Rating~Drug, data = CT)
+
+anova
+
+```
+### Variance
+
+> Variance measures the spread. If you take the square root of a variance, you get the standard deviation. Variance is lowercase sigma squared. Before you can find the variance, you'd have to measure how spread out the data is. That is, you have to find the mean, xbar, for the sample. To measure variance, you have to look at how each point deviates from the mean, which is where the loss function comes into play.
+
+> The way data points are represented are x1-xn. If you have multiple means, xbar A, xbar B and xbar C, you have to find the Total Variation, aka sum of squared total (SST)  = Sum of Squared Between + Sum of Squared Within.
+
+> From this, you can follow this formula SST = SSB/(k-1) + SSW/(N-k), where N is the total sum of items from all groups and k is the number of samples. MSB = SSB/(k-1) and MSW = SSW/N-l. F = MSB/MSW, and if this is close to one, we can;t reject the the null hypothesis H0. We have computers, so if the p-value is very small, then we reject the null hypothesis anyways!
+
+> Let's go back to DRUGS!!!
+
+H0: Mu A = Mu B = Mu C
+HA: At least one of them are different
+
+```{r}
+#reference the code above
+anova
+```
+> In order to get the P-value, you MUST use summary().
+
+```{r}
+summary(anova)
+```
+> Our p-value is super small. If our percent to check (I forge tthe actual name) is 5%, then the p-val < .05 and we reject the null hypothesis.
+
+> The important question to answer here is which drug is different. How can we figure this out? We have to further investigate and we enter multiple hypothesis testing.
+
+> We must do the following...
+
+MuA-MuB
+
+MuA-Muc
+
+MuC-MuB
+
+```{r}
+TukeyHSD(anova, conf.level = 0.95)
+```
+
+> Based on the analysis above, it looks like drug A is the most effective drug in this experiment. we found that by looking at the lower and upper bounds and noticing that A is positive, but C and B are negative.
+
+> We have enough statistical evidence to conclude that the mean pain rating for Drug A is much lower than Drugs B and C. Becuase this is an experiment, Drug A is more effective in treating migraine headaches compared to Drugs B and C
+
+```{r}
+plot(TukeyHSD(anova, conf.level = 0.95))
+```
+
+# 7/18 and 7/19
+
+> Parameter Estimation, Loss Function, Least Square, Simple Linear Regression Model (SLR), Multiple Linear Regression Model (MLR),
+
+
+```{r}
+Starups <- read.csv("C:\\Users\\hodge\\Downloads\\Startups.csv")
+```
+
+## Multiple Linear Model
+
+population model:
+$Y = \beta_0 + \beta_1X$
+
+sample model:
+$Y = \beta_0 + \beta_1\hat{x}$
+
+Population Error Terms
+$\varepsilon x_{i} = y_{i} - \hat{y}$
+
+$Y = \beta_0 + \beta_1X + \varepsilon$
+
+
+Sample Error Terms:
+$Y = \beta_0 + \beta_1\hat{x} + e$
+
+> In short, a multiple linear model allows us to analyze the assumed linear relation between a response Y and multiple predictors X1- XN in the form:
+
+$Y = \beta_0 + \beta_{1} X_{1} + ... + \beta_{p} X_{p} + \varepsilon$
+
+> So, note taht the Y, X and $\beta$ variables actually represent vectors and matrixes, so there's a lot more going on. 
+
+> A design matrix is also the X matrix, so it can change.
+
+## Parameter Estimation
+How do you estimate the y-intercept ($\beta$) and slope (X)? Here comes los function.
+
+## Loss Function
+
+A loss function is a real-valued function of two variables, L($\theta$, a), where $\theta$ is a parameter and a is a real number.
+
+Squared Error Loss Function: L($\theta$, a) = $|\theta - a|^{2}$
+
+Absolute Error function: L($\theta$, a) = |$\theta$ - a|
+
+## Least Square
+
+Minimizing the sum of square of residuals
+
+
+
+> Review from last class
+
+## Simple Linear Regression Model (SLR)
+Pop model --> Y = $X\beta + \varepsilon_{i}$
+Sample model (on the general level) --> Y = $X\hat{\beta} + e_{i}$ 
+
+Sample model (on the individual level) --> $y_{i} = \beta_{i}x_{i} + e_{i}$
+
+## Multiple Linear Regression Model (MLR)
+
+Pop model --> Y = $X\beta + \varepsilon_{i}$
+
+$\begin{matrix}
+  a & b
+\end{matrix}$
+  
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+Startups <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\Startups.csv")
+
+ggplot(Startups, aes(x = R.D.Spend, y = Profit)) +
+  geom_point() + geom_smooth(method = "lm", se = F)
+```
+Remember, residuals = observed - predicted
+
+> Notes Continued in notebook
+
+```{r}
+cor(Startups$Profit, Startups$R.D.Spend)
+```
+> The strength of the linear relationship here is really strong. Let's find the standard deviation of the profit
+
+```{r}
+print(sd(Startups$Profit))
+
+print(sd(Startups$R.D.Spend))
+      
+```
+
+```{r}
+cor(Startups$Profit, Startups$R.D.Spend) * sd(Startups$Profit) / sd(Startups$R.D.Spend)
+```
+
+```{r}
+mean(Startups$Profit) - 0.8542914 * mean(Startups$R.D.Spend)
+```
+
+```{r}
+mod <- lm(Profit~R.D.Spend, data = Startups)
+coef(mod)
+```
+
+
+# 7-22 & 7-23
+
+  Parameter Estimation, Least Squares, Boostrapping, Multiple Linear Regression, General Least Squares Estimates, Model Assumptions
+
+## Simple Lienar Regression
+
+### Least Squares
+Below, we are doing a Least Squares parameter estimation
+
+```{r}
+ggplot(Startups, aes(x=R.D.Spend, y = Profit)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+```
+Here, we can find the y-intercept of the line and the cooresponding slope coefficient of each line
+
+```{r}
+model_1 <- lm(Profit~R.D.Spend, data = Startups)
+coef(model_1)
+```
+### Boostrapping
+below, we are bootstrapping. The sample() function randomly chooses a sample of size nrow(dataset), which counts the
+
+number of rows in the dataset for me.
+
+IN ORDER TO DO THIS MANY TIMES, USE **REPLICATE**
+
+
+```{r}
+Bootstrap_estimates <- replicate(1000,{
+  bootstrap_samples <- Startups[sample(1:nrow(Startups), nrow(Startups), replace = T),]
+
+  #for each of the models, apply the linear models
+  boostrap_models <-lm(Profit~R.D.Spend, data = bootstrap_samples)
+  
+  coef(boostrap_models)
+  
+})
+```
+
+  now, I want to make a linear model with each of these lines. using geom_abline draws 
+  
+  the slopes for each y-intercept, slope pair.
+
+```{r}
+estimates <- data.frame(t(Bootstrap_estimates))
+
+ggplot(Startups, aes(x=R.D.Spend, y = Profit)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F, color = 'red') + 
+  geom_abline(data = estimates, aes(intercept = X.Intercept., slope = R.D.Spend), color = 'magenta')
+```
+  In order to find our bootstrap estimate, we need to average the y-intercept and slope value.
+
+```{r}
+summarize(estimates, mean_b0 = mean(X.Intercept.), mean_b1 = mean(R.D.Spend))
+```
+
+```{r}
+coef(model_1)
+```
+  Above, we are also comparing it to the Least Squares model
+
+## Multiple Linear Regression (MLR)
+  Now the question is how do you find a Multiple Linear Regression Model from these  
+
+```{r}
+model_2 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+
+coef(model_2)
+```
+
+## General Least Squares Estimates
+
+```{r}
+X <- cbind(1, Startups$R.D.Spend, Startups$Administration, Startups$Marketing.Spend)
+
+XtX <- t(X) %*%X
+
+inverse_XtX <- solve(XtX)
+
+Xty <- t(X)%*%Startups$Profit
+```
+
+```{r}
+beta <- inverse_XtX%*%Xty
+```
+
+# Model Assumptions
+```{r}
+library(tidyr)
+```
+
+
+```{r}
+Startups2 <- gather(Startups, key = "predictor", value = "value",
+                    R.D.Spend, Administration, Marketing.Spend)
+```
+
+
+
+# 7-23-24 Class
+
+## Model Assumptions Cont.
+
+### Facet Wrap
+
+  Why are we doing this? We are just beginning with EDA so that we can see the 
+
+relationship between the variables. This gives us an idea of the results later on. 
+
+```{r}
+long <- gather(Startups, key = "predictor", value = "value",
+               R.D.Spend, Administration, Marketing.Spend)
+
+ggplot(long, aes(x = value, y = Profit, color = predictor)) + geom_point() +
+  facet_wrap(~predictor, scales = "free_x")
+```
+### Building Multiple Regression Model
+
+```{r}
+model1 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, 
+             data = Startups)
+
+coef(model1)
+```
+
+  y hat has been created as model1
+
+#### Linearity Assumption (Independence & Equal Variance Assumptions )
+
+```{r}
+Startups_pred <- mutate(Startups, predictions = fitted(model1), 
+                        resid = residuals(model1)) 
+
+ggplot(Startups_pred, aes(x = predictions, y = resid)) +
+  geom_point() + geom_hline(yintercept = 0, color = "orange")
+```
+
+#### Normal Popualtion Assumption
+
+ this code will check if the norm assumption is met
+
+  Because the residuals are really close to the line, we can assume that the normal assumption is met
+  and that the sample data is noramlly distributed.
+
+```{r}
+ggplot(Startups_pred, aes(sample = resid)) +
+  stat_qq() +
+  stat_qq_line( color = "yellow")
+```
+
+#### What Happens when one or more Assumptions fails?
+
+```{r}
+planets <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\PlanetsData.csv")
+```
+
+```{r}
+ggplot(planets, aes(x = distance, y = revolution)) + 
+  geom_point() + geom_smooth(method = "lm", se = F, color = "cyan")
+```
+```{r}
+model2 <- lm(revolution~distance, data = planets)
+coef(model2)
+```
+
+```{r}
+planet_pred <- mutate(planets, pred=fitted(model2), resid=residuals(model2))
+```
+
+```{r}
+#residual plot
+ggplot(planet_pred, aes(x=pred, y=resid)) + 
+  geom_point() +
+  geom_hline(yintercept = 0, color = "darkgoldenrod1")
+```
+```{r}
+ggplot(planet_pred, aes(sample = resid)) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+  SO, what do you do, you do a variable transformation by doing a log transformation.
+
+```{r}
+planets2 <- mutate(planets, log_dist = log(distance), log_rev=log(revolution))
+```
+
+```{r}
+ggplot(planets2, aes(x=log_dist, y=log_rev)) +
+  geom_point()
+```
+
+```{r}
+model3 <- lm(log_rev~log_dist, data=planets2)
+coef(model3)
+```
+
+```{r}
+planet_pred2 <- mutate(planets2, pred=fitted(model3), resid=residuals(model3))
+
+ggplot(planet_pred2, aes(x=pred, y=resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = 'brown1')
+```
+
+
+# 7-24-24
+
+```{r}
+
+model1 <- lm(Profit~R.D.Spend, data = Startups)
+coef(model1)
+```
+# Predictions
+  below, we are making two predicitons and these are the values that we created with the R.D.Spend
+
+```{r}
+new_dat <- data.frame(R.D.Spend = c(165349.20, 500000))
+
+predict(model1, newdata = new_dat)
+```
+```{r}
+predict(model1, newdata = new_dat, interval = "prediction", level = 0.95)
+```
+
+  The intervals above are more meaningful to employers and the prediction intervals capture the Profit value in the Startups table.
+
+  "prediction" interval is a prediction on a model for a particular observation. 
+
+```{r}
+predict(model1, newdata = new_dat, interval = "confidence", level = 0.95)
+```
+  "confidence" predicts the mean on average of a company's profit and this is more precise and narrower.
+
+  "confidence" interval is a prediction for a many groups, aka the average
+
+## How do you make predictions when the data is transformed?
+
+```{r}
+model3 <- lm(log_rev~log_dist, data=planets2)
+coef(model3)
+```
+
+
+  In order to do this, you'll have to take the log of Earth's distance and multiply it out
+
+```{r}
+log_rev = -0.9031235 + 1.5013054*log(93)
+```
+
+  then, to go backwards, you have to take the exponentiation of the answer to get the days.
+
+```{r}
+exp(log_rev)
+```
+
+```{r}
+new <- data.frame(log_dist = log(93))
+predict(model3, new)
+```
+  The prediction above is our fitted value. 
+
+
+```{r}
+ predict(model3, new, interval = "prediction")
+```
+
+  to make a prediction for the number of days for earth to revolve around the sun, we can take the exp() for the upper and lower bounds of the prediction interval.
+
+```{r}
+exp(5.886647)
+exp(5.916739)
+```
+  so, we know that 365 does in fact fall within this interval.
+
+
+```{r}
+Avg_profit <- mean(Startups$Profit)
+ggplot(Startups, aes(x = R.D.Spend, y = Profit)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = F) +
+  geom_hline(yintercept = Avg_profit, color = "red")
+```
+
+```{r}
+summary(model1,)
+```
+
+## More on the Independent Assumption
+ Multicollinearity may be tested with three central criteria
+ 
+1. Correlation matrix - correlation coefficients for pairwise comparisons between predictors ashould ideally be below 0.80. It brings the covariance between 1 and -1. Basically standardizes the covariance matrix
+
+2. Covariance matrix - also known as variance matrix, also shows pairwise comparisons between predictors
+
+### Covariance matrix
+```{r}
+Startups2 <- Startups[,-4]
+cor_matrix <-round(cor(Startups2),2)
+cor_matrix
+```
+
+```{r}
+library(ggcorrplot)
+```
+
+```{r}
+ggcorrplot(cor_matrix, lab = T)
+```
+
+  Tolerance - the tolerance measures the influence of one predictor variable on all other predictor vairables. TOlerance is defined as T=1-R^2 for the first step regression analysis. If T<0.1 there might be multicollinearity issues and with T <0.01 there certainly is multicolinearity.
+
+```{r}
+model10 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+```
+
+```{r}
+library(car)
+vif(model10)
+```
+  If VIF is higher, drop that variable and run it again to see if it changes.
+
+  drop the variable 
+
+# 7-25-24
+ Inference on the linear model, Partial Effect Plot
+
+## Inference on the linear model
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+Startups <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\Startups.csv")
+```
+
+```{r}
+model1 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+
+summary(model1)
+```
+We now want to investigate the p-value
+
+R.D.Spend is less than 0.05, so we are good with this value b/c the p-value is 2e-16
+
+Since Administration's p-value is 0.602, we can't use it to predict the model, so we don't care about it.
+
+With Marketing.Spend, it is our call to make just because we don't have that many predictors. It is technically greater than 
+($\alpha = 0.05$).So, we are keeping it.
+
+Normally, what we would do is recalculate the model and get different p-values, which might end up changing the model. Let's try that building a second model.
+
+```{r}
+model2 <- lm(Profit~R.D.Spend + Marketing.Spend, data = Startups)
+summary(model2)
+```
+
+Welp, we are actually getting rid of model 2. Notice that the p-values are changing. This is because the standard errors are decreasing in the summary of the output.
+
+There's a way to automate all of the Bonferroni process. It's Called **STEPWISE REGRESSION**. There's forward selection and backwardselimination. At the beginning of the model, it will start with 1 predictor and apply the Akaike Information Criteria (AIC), which gives a metric that determines if that variable is adding too much noise into the model. If that's the case, it will drop the variable and add another.
+
+```{r}
+library(MASS)
+```
+
+
+```{r}
+model3 <- lm(Profit~R.D.Spend + Marketing.Spend, data = Startups, method = "stepAIC")
+
+#model 1 has all three predictors
+aic<- stepAIC(model1, direction = "both")
+```
+We want the model with the smallest AIC
+
+## Partial Effect Plots
+added variable plots (avPlot)
+```{r}
+avPlots(model1)
+```
+  The partial effect plots shows the slope of the two residuals plot IF R.D.Spend and Asministration are both held fixed.
+
+  The negative slope plot says every time Administration slope goes up 1 dollar, the profit decreases. 
+
+  The last graph says that every time the marketing.spend plot goes up, the profit also increases. 
+
+  The point of this plot is to show us the effect of each predictor on the response variable if other predictors are held fixed.

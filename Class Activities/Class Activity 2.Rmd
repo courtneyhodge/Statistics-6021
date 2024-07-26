@@ -1,0 +1,61 @@
+---
+title: "Class Activity 2"
+author: "Courtney Hodge"
+date: "2024-07-17"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+AB_Test_data <- read.csv("C:\\Users\\hodge\\Downloads\\WA_Marketing-Campaign.csv")
+```
+
+```{r}
+Promotion3_data<-subset(AB_Test_data, Promotion==3)
+```
+
+#1.a
+
+```{r}
+mean_calc <- function(x){
+  
+  return(mean(x, na.rm = T))
+}
+
+#replicate is done 10,000 times
+bootstrap_means <- replicate(1000, {
+  bootstraped_data <- sample(Promotion3_data$SalesInThousands, replace = T)
+  mean_calc(bootstraped_data)
+})
+
+bootstrap_df <- data.frame(bootstrap_means)
+
+
+quantile(bootstrap_means, c(0.025, 0.975))
+```
+
+> The mean interval falls between 52.98 and 57.75
+
+#1.b 
+
+```{r}
+t.test(Promotion3_data$SalesInThousands)
+```
+> We are 95% Confident that the mean sale amount for all restuarants that adopt Promotion 3 falls between 52.95221 and 57.77673 measured in the thousands
+
+#1.c
+
+> based on the similar intervals of part a and b, the widths of the Bootstrap and the t-intervals are about the same. Their measurements for mean sale amounts both fall a couple tenths of points above 52 and below 58.
+
+#2
+```{r}
+Promotion_2_3<-subset(AB_Test_data, Promotion==2 | Promotion==3)
+```
+ 
+```{r}
+t.test(SalesInThousands~Promotion, data = Promotion_2_3)
+```
+
+> We advise them to use Promotion 3 over Promotion 2 and, on average, we notice that with Promotion 3, companies can expect to generate between 4.8 and 11.3 thousand more sales over Promotion 2. 

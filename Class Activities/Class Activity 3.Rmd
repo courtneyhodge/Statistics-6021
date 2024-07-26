@@ -1,0 +1,51 @@
+---
+title: "Class Activity 3"
+author: "Courtney Hodge"
+date: "2024-07-18"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+data <- read.csv("C:\\Users\\hodge\\Downloads\\WA_Marketing-Campaign (1).csv")
+
+```
+
+# 1
+
+```{r}
+ggplot(data, aes(x = as.character(Promotion), y = SalesInThousands, fill = Promotion)) +
+  geom_boxplot()
+```
+
+# 2
+> The best way to conduct this investigation is to use anova method to compare more than two means.
+
+
+# 3
+
+> $H_0: \mu_1 = \mu_2 = \mu_3$
+
+> $HA: \mu_i \neq \mu_j$ for some (i,j) pair
+
+> In words, the null hypothesis states that the average sales in thousands amount across the promotions should be equal to each other.
+
+> The alternative hypothesis states that at least one of the sale amounts across the promotion should not be equal to the other promotions.
+
+# 4
+
+```{r}
+anova <- aov(SalesInThousands~as.character(Promotion), data = data)
+
+summary(anova)
+```
+> Since the p-value = 6.77e-10 and it is less than the $\alpha = 0.05$, we reject the null hypothesis that all the average promotion sales in thousands will be equal to each other.  
+
+# 5
+
+> Based on our knowledge that the mean sales in thousands differs between the promotions, this leads to the question of which promotion yields the most sales on average. This means that we will need to do a Post Hoc test. 
+

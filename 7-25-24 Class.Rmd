@@ -1,0 +1,67 @@
+---
+title: "7-25-24 Class"
+author: "Courtney Hodge"
+date: "2024-07-25"
+output: html_document
+---
+
+# Inference on the linear model
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+Startups <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\Startups.csv")
+```
+
+```{r}
+model1 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
+
+summary(model1)
+```
+We now want to investigate the p-value
+
+R.D.Spend is less than 0.05, so we are good with this value b/c the p-value is 2e-16
+
+Since Administration's p-value is 0.602, we can't use it to predict the model, so we don't care about it.
+
+With Marketing.Spend, it is our call to make just because we don't have that many predictors. It is technically greater than 
+($\alpha = 0.05$).So, we are keeping it.
+
+Normally, what we would do is recalculate the model and get different p-values, which might end up changing the model. Let's try that building a second model.
+
+```{r}
+model2 <- lm(Profit~R.D.Spend + Marketing.Spend, data = Startups)
+summary(model2)
+```
+
+Welp, we are actually getting rid of model 2. Notice that the p-values are changing. This is because the standard errors are decreasing in the summary of the output.
+
+There's a way to automate all of the Bonferroni process. It's Called **STEPWISE REGRESSION**. There's forward selection and backwardselimination. At the beginning of the model, it will start with 1 predictor and apply the Akaike Information Criteria (AIC), which gives a metric that determines if that variable is adding too much noise into the model. If that's the case, it will drop the variable and add another.
+
+```{r}
+library(MASS)
+```
+
+
+```{r}
+model3 <- lm(Profit~R.D.Spend + Marketing.Spend, data = Startups, method = "stepAIC")
+
+#model 1 has all three predictors
+aic<- stepAIC(model1, direction = "both")
+```
+We want the model with the smallest AIC
+
+# Partial Effect Plots
+added variable plots (avPlot)
+```{r}
+avPlots(model1)
+```
+> The partial effect plots shows the slope of the two residuals plot IF R.D.Spend and Asministration are both held fixed.
+
+> The negative slope plot says every time Administration slope goes up 1 dollar, the profit decreases. 
+
+> The last graph says that every time the marketing.spend plot goes up, the profit also increases. 
+
+> The point of this plot is to show us the effect of each predictor on the response variable if other predictors are held fixed.

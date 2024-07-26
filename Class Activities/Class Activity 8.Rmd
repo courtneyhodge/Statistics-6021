@@ -1,0 +1,83 @@
+---
+title: "Class Activity 8"
+author: "Courtney Hodge"
+date: "2024-07-25"
+output: html_document
+---
+
+# Multicollinearity
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data <- read.csv("C:\\Users\\hodge\\Downloads\\credit_data.csv")
+
+data
+```
+
+
+## 1
+```{r}
+data <- data.frame(data)
+data2 <- data[2:7]
+cor_matrix <-round(cor(data2),2)
+cor_matrix
+```
+
+```{r}
+library(ggcorrplot)
+ggcorrplot(cor_matrix, lab = T, type = "lower")
+```
+
+> There are issues with multicollinearity between Limit and Rating because their because correlation coefficients for pairwise comparisons between predictors ashould ideally be below 0.80
+
+## 2
+
+```{r}
+library(car)
+```
+
+```{r}
+model1 <- lm(Balance~Income + Limit + Rating + Cards + Age + Education, data = data)
+
+vif(model1)
+```
+> After further investigation, Limit and Rating still have multicollinearity issues based on their VIF values.
+
+```{r}
+model2 <- lm(Balance~Income + Rating + Cards + Age + Education, data = data)
+```
+
+```{r}
+vif(model2)
+```
+> After eliminating Limit, the vif values have decreased for all predictors and there are no further multicollinearity.
+
+## 3
+```{r}
+model3 <- lm(Balance~Income + Rating + Cards + Age + Education, data = data)
+
+coef(model3)
+```
+
+```{r}
+new_dat <- data.frame(Income = c(-7.5431353), Rating = c(3.9366411), Cards = c(2.5641756), Age = c(-0.9018958), Education = c(2.4071949))
+
+predict(model3, newdata = new_dat)
+```
+
+```{r}
+predict(model3, newdata = new_dat, interval = "prediction", level = 0.95)
+```
+
+> We are 95% confident that a specific individual would have a predicted balance values fall between -771.5115 and -109.1669
+
+
+```{r}
+predict(model3, newdata = new_dat, interval = "confidence", level = 0.95)
+
+```
+
+> We are 95% confident that the mean predicted balance values would fall between -536.9088 and -353.7696

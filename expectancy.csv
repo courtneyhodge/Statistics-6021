@@ -1,0 +1,184 @@
+Country,Status,Life.expectancy,Adult.Mortality,infant.deaths,Total.expenditure,HIV.AIDS,BMI,GDP,Population,Schooling
+Afghanistan,Developing,65,263,62,8.16,0.1,19.1,584.25921,33736494,10.1
+Albania,Developing,77.8,74,0,6,0.1,58,3954.22783,28873,14.2
+Algeria,Developing,75.6,19,21,NA,0.1,59.5,4132.76292,39871528,14.4
+Angola,Developing,52.4,335,66,NA,1.9,23.3,3695.793748,2785935,11.4
+Antigua and Barbuda,Developing,76.4,13,0,NA,0.2,47.7,13566.9541,NA,13.9
+Argentina,Developing,76.3,116,8,NA,0.1,62.8,13467.1236,43417765,17.3
+Armenia,Developing,74.8,118,1,NA,0.1,54.9,369.654776,291695,12.7
+Australia,Developed,82.8,59,1,NA,0.1,66.6,56554.3876,23789338,20.4
+Austria,Developed,81.5,65,0,NA,0.1,57.6,43665.947,8633169,15.9
+Azerbaijan,Developing,72.7,118,5,NA,0.1,52.5,55.31382,9649341,12.7
+Bahamas,Developing,76.1,147,0,NA,0.1,64.5,NA,NA,12.6
+Bahrain,Developing,76.9,69,0,NA,0.1,63.6,22688.87824,NA,14.5
+Bangladesh,Developing,71.8,129,92,NA,0.1,18.3,121.15812,1612886,10.2
+Barbados,Developing,75.5,98,0,NA,0.1,54.5,15557.8381,NA,15.3
+Belarus,Developing,72.3,196,0,NA,0.1,62.3,5949.11677,9489616,15.6
+Belgium,Developed,81.1,74,0,NA,0.1,63.7,4356.875,11274196,16.6
+Belize,Developing,71,175,0,NA,0.2,5.9,4849.997495,359288,12.8
+Benin,Developing,60,249,25,NA,1,25.7,783.94791,1575952,10.7
+Bhutan,Developing,69.8,211,0,NA,0.5,24.5,2613.645177,787386,12.5
+Bolivia (Plurinational State of),Developing,77,186,8,NA,0.1,52.6,NA,NA,13.8
+Bosnia and Herzegovina,Developing,77.4,88,0,NA,0.1,55.8,4574.9787,3535961,14.2
+Botswana,Developing,65.7,256,2,NA,2.2,37.9,6532.651,229197,12.6
+Brazil,Developing,75,142,42,NA,0.1,56.1,8757.2622,2596218,15.2
+Brunei Darussalam,Developing,77.7,78,0,NA,0.1,41.2,3967.8951,NA,14.9
+Bulgaria,Developed,74.5,137,0,NA,0.1,65.7,6993.47736,7177991,15
+Burkina Faso,Developing,59.9,26,38,NA,0.6,19.4,615.592225,1811624,7.7
+Burundi,Developing,59.6,288,21,NA,0.7,18.7,33.681223,119927,10.6
+Côte d'Ivoire,Developing,53.3,397,57,NA,1.9,28,NA,NA,NA
+Cabo Verde,Developing,73.3,114,0,NA,0.2,31.3,2954.119467,532913,13.5
+Cambodia,Developing,68.7,174,10,NA,0.2,19.6,1163.18977,15517635,10.9
+Cameroon,Developing,57.3,357,45,NA,3.5,29,1244.429421,22834522,10.4
+Canada,Developing,82.2,64,2,NA,0.1,67,43315.744,3584861,16.3
+Central African Republic,Developing,52.5,397,15,NA,4.4,22.7,348.381417,45461,7.1
+Chad,Developing,53.1,356,46,NA,2.8,19.1,777.248751,149413,7.3
+Chile,Developing,85,82,2,NA,0.1,63.8,13653.2264,17762681,16.3
+China,Developing,76.1,85,157,NA,0.1,32.9,869.211938,137122,13.5
+Colombia,Developing,74.8,143,10,NA,0.1,57.9,644.525556,48228697,13.6
+Comoros,Developing,63.5,227,1,NA,0.8,24.2,727.6463868,777424,11.1
+Congo,Developing,64.7,267,7,NA,2.8,27.4,NA,NA,11.1
+Costa Rica,Developing,79.6,95,1,NA,0.1,6.5,1146.36273,487852,14.2
+Croatia,Developed,78,95,0,NA,0.1,63.7,11579.6674,42364,15.3
+Cuba,Developing,79.1,92,1,NA,0.1,61.4,762.261218,NA,13.9
+Cyprus,Developed,85,52,0,NA,0.1,6.3,2375.1127,116985,14.3
+Czechia,Developed,78.8,86,0,NA,0.1,66.1,NA,NA,NA
+Democratic People's Republic of Korea,Developing,76,139,6,NA,0.1,32.9,NA,NA,NA
+Democratic Republic of the Congo,Developing,59.8,258,236,NA,1.1,21.6,NA,NA,NA
+Denmark,Developed,86,71,0,NA,0.1,58.8,5314.64416,5683483,19.2
+Djibouti,Developing,63.5,241,1,NA,2.1,35,1862.167274,927414,6.3
+Dominican Republic,Developing,73.9,152,6,NA,0.3,58.9,6468.471648,1528394,13.2
+Ecuador,Developing,76.2,118,6,NA,0.1,54.2,625.62224,16144368,14
+Egypt,Developing,79,159,51,NA,0.1,61.1,NA,NA,13.1
+El Salvador,Developing,73.5,178,2,NA,0.2,56.1,4127.11775,6312478,13.2
+Equatorial Guinea,Developing,58.2,32,3,NA,4.2,24.5,1347.31257,1175389,9.2
+Eritrea,Developing,64.7,255,5,NA,0.4,18.6,NA,NA,5
+Estonia,Developing,77.6,119,0,NA,0.1,59.9,1774.9291,131547,16.5
+Ethiopia,Developing,64.8,225,136,NA,0.6,17.6,645.4637627,9987333,8.4
+Fiji,Developing,69.9,188,0,NA,0.1,62.7,4921.89629,892149,15.3
+Finland,Developing,81.1,76,0,NA,0.1,62.1,4245.39744,5479531,17
+France,Developing,82.4,78,2,NA,0.1,62.5,36526.7711,6662468,16.3
+Gabon,Developing,66,229,2,NA,2.7,36.3,7388.984144,193175,12.6
+Gambia,Developing,61.1,262,3,NA,1.7,27.3,NA,NA,8.9
+Georgia,Developing,74.4,129,1,NA,0.1,56.2,3764.64912,37171,13.9
+Germany,Developed,81,68,2,NA,0.1,62.3,41176.88158,81686611,17.1
+Ghana,Developing,62.4,249,37,NA,0.7,28.6,1361.11395,27582821,11.4
+Greece,Developing,81,72,0,NA,0.1,66.5,187.78991,182883,17.2
+Grenada,Developing,73.6,142,0,NA,0.1,48.4,9212.192824,NA,15.8
+Guatemala,Developing,71.9,186,10,NA,0.4,5.6,3923.573344,16252429,10.7
+Guinea,Developing,59,284,26,NA,0.5,23.3,554.48766,1291533,8.8
+Guinea-Bissau,Developing,58.9,275,4,NA,3.2,26.3,596.8717189,177526,9.2
+Guyana,Developing,66.2,215,0,NA,0.3,46.7,4136.689919,768514,10.3
+Haiti,Developing,63.5,24,14,NA,0.5,49.9,814.5463952,171161,9.1
+Honduras,Developing,74.6,147,3,NA,0.3,51,2326.15856,896829,11.2
+Hungary,Developed,75.8,134,0,NA,0.1,64.8,12365.6263,984328,15.6
+Iceland,Developed,82.7,49,0,NA,0.1,61,5734.4436,33815,19
+India,Developing,68.3,181,910,NA,0.2,18.7,1613.18878,1395398,11.6
+Indonesia,Developing,69.1,176,114,NA,0.3,27.4,3336.16686,258162113,12.9
+Iran (Islamic Republic of),Developing,75.5,83,18,NA,0.1,59.7,NA,NA,14.8
+Iraq,Developing,68.9,182,32,NA,0.1,59.1,4974.2693,36115649,10.1
+Ireland,Developed,81.4,64,0,NA,0.1,62.8,6664.144,4676835,18.6
+Israel,Developing,82.5,58,0,NA,0.1,64.9,35729.37253,8381,16
+Italy,Developed,82.7,56,1,NA,0.1,63.6,349.14755,673582,16.3
+Jamaica,Developing,76.2,125,1,NA,0.5,54.2,4965.989857,2871934,12.8
+Japan,Developed,83.7,55,2,NA,0.1,29,34474.13736,127141,15.3
+Jordan,Developing,74.1,112,4,NA,0.1,65.6,496.99275,915932,13.1
+Kazakhstan,Developing,72,198,4,NA,0.1,53.1,159.9817,17544126,15
+Kenya,Developing,63.4,249,54,NA,2.8,22,1349.97144,47236259,11.1
+Kiribati,Developing,66.3,198,0,NA,0.1,77.6,1424.483611,11247,11.9
+Kuwait,Developing,74.7,81,0,NA,0.1,71.4,28975.418,NA,13.3
+Kyrgyzstan,Developing,71.1,166,3,NA,0.1,44.9,NA,NA,13
+Lao People's Democratic Republic,Developing,65.7,194,8,NA,0.2,21.7,NA,NA,10.8
+Latvia,Developed,74.6,153,0,NA,0.1,61.2,13666.58336,1977527,16
+Lebanon,Developing,74.9,98,1,NA,0.1,66.1,846.632851,5851479,13.3
+Lesotho,Developing,53.7,484,4,NA,9.3,32.6,173.82893,2174645,10.7
+Liberia,Developing,61.4,259,8,NA,0.9,27.3,452.38717,4499621,9.9
+Libya,Developing,72.7,138,1,NA,0.1,64.8,NA,NA,13.4
+Lithuania,Developed,73.6,165,0,NA,0.1,62.4,14252.42853,29491,16.5
+Luxembourg,Developed,82,63,0,NA,0.1,61.3,1199.8223,56964,13.9
+Madagascar,Developing,65.5,22,28,NA,0.3,2.5,41.8575951,2423488,10.3
+Malawi,Developing,58.3,365,26,NA,4.8,19.6,362.6575444,1757367,10.8
+Malaysia,Developing,75,123,4,NA,0.1,4.6,9643.644683,3723155,13.1
+Maldives,Developing,78.5,61,0,NA,0.1,27.4,8395.785198,49163,12.7
+Mali,Developing,58.2,266,52,NA,1.5,23.8,729.725338,1746795,8.4
+Malta,Developed,81.7,54,0,NA,0.1,69.6,23819.4636,431874,14.6
+Mauritania,Developing,63.1,25,8,NA,0.9,3.8,1158.256469,4182341,8.5
+Mauritius,Developing,74.6,146,0,NA,0.1,33.3,9252.11724,126265,15.2
+Mexico,Developing,76.7,122,30,NA,0.1,63.5,9143.128494,12589949,13.3
+Micronesia (Federated States of),Developing,69.4,166,0,NA,0.1,69.4,NA,NA,11.7
+Mongolia,Developing,68.8,222,1,NA,0.1,52.7,3944.1839,2976877,14.8
+Montenegro,Developing,76.1,16,0,NA,0.1,61.8,6461.192554,622159,15.1
+Morocco,Developing,74.3,95,17,NA,0.1,58.5,2847.285569,3483322,12.1
+Mozambique,Developing,57.6,355,60,NA,3.9,22.6,528.3125597,281691,9.1
+Myanmar,Developing,66.6,199,39,NA,0.3,23.8,1194.59137,5243669,9.1
+Namibia,Developing,65.8,248,2,NA,2.1,35.7,4737.66996,2425561,11.7
+Nepal,Developing,69.2,165,17,NA,0.1,19.1,743.7653489,28656282,12.2
+Netherlands,Developed,81.9,57,1,NA,0.1,62.1,44292.88473,16939923,18.1
+New Zealand,Developed,81.6,66,0,NA,0.1,67.5,3821.8937,NA,19.2
+Nicaragua,Developing,74.8,145,2,NA,0.1,54,295.966488,68235,11.7
+Niger,Developing,61.8,22,49,NA,0.4,19.3,358.99731,19896965,5.4
+Nigeria,Developing,54.5,344,483,NA,3.7,25.4,2655.157977,181181744,10
+Norway,Developed,81.8,59,0,NA,0.1,61.2,7455.24654,518867,17.7
+Oman,Developing,76.6,99,1,NA,0.1,54.6,16627.36433,NA,13.7
+Pakistan,Developing,66.4,161,352,NA,0.1,25.4,1431.244865,18938513,8.1
+Panama,Developing,77.8,118,1,NA,0.1,57.8,13134.4367,3969249,13
+Papua New Guinea,Developing,62.9,275,10,NA,0.6,48.6,NA,7919825,10
+Paraguay,Developing,74,146,2,NA,0.2,5.2,419.367724,6639119,12.3
+Peru,Developing,75.5,123,8,NA,0.1,55.6,63.343259,31376671,13.4
+Philippines,Developing,68.5,211,52,NA,0.1,25.4,2878.33837,11716359,11.7
+Poland,Developed,77.5,117,2,NA,0.1,61.7,12565.9876,37986412,16.4
+Portugal,Developed,81.1,76,0,NA,0.1,61.6,1922.681,135876,16.6
+Qatar,Developing,78.2,68,0,NA,0.1,69.3,66346.52267,NA,13.4
+Republic of Korea,Developing,82.3,64,1,NA,0.1,31.7,NA,NA,NA
+Republic of Moldova,Developing,72.1,157,1,NA,0.1,53.4,NA,NA,NA
+Romania,Developed,75,133,2,NA,0.1,6.7,8958.788593,19815481,14.7
+Russian Federation,Developing,75,222,13,NA,0.1,6.5,9329.298351,1449687,15
+Rwanda,Developing,66.1,227,11,NA,0.4,21.4,71.348397,11629553,10.8
+Saint Lucia,Developing,75.2,138,0,NA,0.1,47.5,NA,NA,13.1
+Saint Vincent and the Grenadines,Developing,73.2,156,0,NA,0.1,54.1,NA,NA,13.3
+Samoa,Developing,74,125,0,NA,0.1,74.7,4149.363444,193759,12.9
+Sao Tome and Principe,Developing,67.5,19,0,NA,0.2,3.9,1624.63963,195553,11.2
+Saudi Arabia,Developing,74.5,88,7,NA,0.1,68.2,2732.86172,NA,16.1
+Senegal,Developing,66.7,188,19,NA,0.3,24.3,98.7256145,14976994,9.5
+Serbia,Developing,75.6,121,1,NA,0.1,6,5237.255334,795383,14.4
+Seychelles,Developing,73.2,168,0,NA,0.1,37.4,1539.464,93419,14.1
+Sierra Leone,Developing,51,413,22,NA,0.5,24.4,587.538233,723725,9.5
+Singapore,Developed,83.1,55,0,NA,0.1,33.2,53629.73746,NA,15.4
+Slovakia,Developed,76.7,19,0,NA,0.1,59.1,NA,NA,15
+Slovenia,Developed,88,74,0,NA,0.1,6.1,2729.86383,263531,17.3
+Solomon Islands,Developing,69.2,177,0,NA,0.1,5.5,1922.41388,587482,9.6
+Somalia,Developing,55,312,50,NA,0.7,24.3,426.98537,NA,NA
+South Africa,Developing,62.9,328,42,NA,3.6,51.1,5769.77258,5511976.68,13
+South Sudan,Developing,57.3,332,26,NA,3.4,NA,758.725782,11882136,4.9
+Spain,Developed,82.8,56,1,NA,0.1,66.6,25683.84565,46447697,17.7
+Sri Lanka,Developing,74.9,138,3,NA,0.1,23.4,3844.89123,2966,14
+Sudan,Developing,64.1,225,58,NA,0.3,NA,2513.884661,3864783,7.2
+Suriname,Developing,71.6,176,0,NA,0.4,58.3,8818.982566,55328,12.7
+Swaziland,Developing,58.9,373,2,NA,7.1,32.3,3136.92511,131911,11.4
+Sweden,Developed,82.4,53,0,NA,0.1,59.5,5585.25847,9799186,15.9
+Switzerland,Developed,83.4,49,0,NA,0.1,57.4,8989.8424,8282396,16
+Syrian Arab Republic,Developing,64.5,293,6,NA,0.1,57.1,NA,18734987,9
+Tajikistan,Developing,69.7,161,10,NA,0.2,4.7,918.6771543,8548651,11.3
+Thailand,Developing,74.9,148,8,NA,0.1,33.6,5814.863134,686576,13.6
+The former Yugoslav republic of Macedonia,Developing,75.7,12,0,NA,0.1,6.3,NA,NA,12.9
+Timor-Leste,Developing,68.3,152,2,NA,0.1,17.4,1161.76935,124977,12.5
+Togo,Developing,59.9,287,13,NA,1,24.3,551.138346,741682,12
+Tonga,Developing,73.5,133,0,NA,0.1,75.2,493.775387,16364,14.3
+Trinidad and Tobago,Developing,71.2,17,0,NA,0.3,47.1,17321.83373,13692,12.7
+Tunisia,Developing,75.3,1,3,NA,0.1,61.2,3828.91589,11273661,14.6
+Turkey,Developing,75.8,16,15,NA,0.1,66.1,1979.52569,78271472,14.5
+Turkmenistan,Developing,66.3,215,6,NA,0.1,48.6,6432.668768,5565284,10.8
+Uganda,Developing,62.3,291,66,NA,3.1,18.5,693.8963829,414487,10
+Ukraine,Developing,71.3,195,4,NA,0.2,61.3,2124.662666,4515429,15.3
+United Arab Emirates,Developing,77.1,75,1,NA,0.1,64.2,3911.74689,NA,13.3
+United Kingdom of Great Britain and Northern Ireland,Developed,81.2,69,3,NA,0.1,66.6,NA,NA,NA
+United Republic of Tanzania,Developing,61.8,279,85,NA,1.4,23.8,NA,NA,NA
+United States of America,Developed,79.3,13,23,NA,0.1,69.6,NA,NA,NA
+Uruguay,Developing,77,116,0,NA,0.1,64,15524.84247,3431552,15.5
+Uzbekistan,Developing,69.4,184,15,NA,0.1,44.7,2137.576852,312989,12.1
+Vanuatu,Developing,72,13,0,NA,0.1,53.3,285.83414,26463,10.8
+Venezuela (Bolivarian Republic of),Developing,74.1,157,9,NA,0.1,62.1,NA,NA,14.3
+Viet Nam,Developing,76,127,28,NA,0.1,17.5,NA,NA,12.6
+Yemen,Developing,65.7,224,37,NA,0.1,41.3,NA,NA,9
+Zambia,Developing,61.8,33,27,NA,4.1,23.4,1313.889646,161587,12.5
+Zimbabwe,Developing,67,336,22,NA,6.2,31.8,118.69383,15777451,10.3

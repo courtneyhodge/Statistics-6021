@@ -1,0 +1,85 @@
+---
+title: "7-16-24 Class"
+author: "Courtney Hodge"
+date: "2024-07-16"
+output: html_document
+---
+Call file.choose() to find the directory of a file on your machine
+```{r}
+Classdata <- read.csv("C:\\Users\\hodge\\Downloads\\ClassData.csv")
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+OurData5 <-data |> mutate(sleep = as.numeric(Sleep_Hrs))
+
+```
+
+```{r}
+#defaults to 95% CI
+t.test(OurData5$sleep)
+```
+
+# Bootstrapping
+```{r}
+mean_calc <- function(x){
+  
+  return(mean(x, na.rm = T))
+}
+
+#replicate is done 10,000 times
+bootstrap_means <- replicate(10000, {
+  bootstraped_data <- sample(OurData5$sleep, replace = T)
+  mean_calc(bootstraped_data)
+})
+
+bootstrap_df <- data.frame(bootstrap_means)
+
+#normal dist of boostrap df
+ggplot(bootstrap_df, aes(x = bootstrap_means)) +
+  geom_density()
+```
+```{r}
+quantile(bootstrap_means, c(0.025, 0.975))
+#95% confidence interval is (6.969,7.298) <- note that this will change with each run
+```
+
+# Testing Hypothesis about Proportions
+
+```{r}
+prop.test(40, 100, p = 0.85, alternative = "l")
+#our p value is very close to zero (2.2e-16). Since our p-value < 0.01 = alpha, you will reject the null hypothesis!
+
+#note, whenever your p-val < H0, you say that it is a statistically significant result
+```
+A final project group member tells you that all UVa students sleep for 6
+hours on average. Use students from this class as a random sample. Do
+you believe your classmate - test your conjecture that all UVa students
+sleep more than 6 hours on average? Test at α = 0.05.
+
+```{r}
+#default is 2 sided 
+t.test(OurData5$sleep, mu = 6, alternative = "g")
+```
+> We will reject the null because p val < alpha.
+
+
+```{r}
+#list the (successes, the sample size)
+#Slide pack 2, pg 8
+prop.test(c(7, 15), c(15, 19))
+#we are 95% confident that the proportion of customers who would select A over B is (-0.694, 0.04)
+
+# we can therefore not make a conclusion about this
+```
+```{r}
+nba_data <- read.csv("C:\\Users\\hodge\\Downloads\\nba.csv")
+```
+
+```{r}
+home_count <- count(nba_data$home_away)
+```
+

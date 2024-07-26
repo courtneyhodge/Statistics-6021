@@ -1,0 +1,61 @@
+---
+title: "Class Activity 6"
+author: "Courtney Hodge"
+date: "2024-07-23"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+life_data <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\expectancy.csv")
+```
+
+```{r}
+life_data3<-select(life_data,Life.expectancy, Adult.Mortality,
+infant.deaths,HIV.AIDS,BMI, GDP,Schooling)%>%
+na.omit()
+```
+
+# 1a
+
+```{r}
+X <- cbind(1, life_data3$Adult.Mortality, life_data3$infant.deaths, life_data3$HIV.AIDS, life_data3$BMI, life_data3$GDP,life_data3$Schooling)
+```
+
+# 1b
+
+```{r}
+Y <- as.matrix(life_data3$Life.expectancy)
+
+beta_hat <- solve((t(X) %*% (X)))%*%t(X)%*%Y
+
+beta_hat
+```
+# 2
+```{r}
+model <- lm(Life.expectancy~Adult.Mortality +  infant.deaths + HIV.AIDS + BMI + GDP + Schooling, 
+             data = life_data3)
+
+coef(model)
+```
+
+# 3
+```{r}
+Bootstrap_estimates <- replicate(10000,{
+  bootstrap_samples <- life_data3[sample(1:nrow(life_data3), nrow(life_data3), replace = T),]
+
+  #for each of the models, apply the linear models
+  boostrap_models <-lm(Life.expectancy~Adult.Mortality +  infant.deaths + HIV.AIDS + BMI + GDP + Schooling, data = life_data3)
+  
+  coef(boostrap_models)
+  
+})
+```
+
+```{r}
+estimates <- data.frame(t(Bootstrap_estimates))
+estimates
+```
+

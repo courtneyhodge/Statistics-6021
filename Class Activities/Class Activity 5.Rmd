@@ -1,0 +1,66 @@
+---
+title: "Class Activity 5"
+author: "Courtney Hodge"
+date: "2024-07-22"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+life_data <- read.csv("C:\\Users\\hodge\\OneDrive - Baylor University\\Desktop\\UVA Coding Folder\\STAT 6021\\expectancy.csv")
+```
+
+```{r}
+life_data2<- select(life_data,Life.expectancy, GDP) |> 
+  na.omit()
+```
+
+## 1a
+```{r}
+ggplot(life_data2, aes(x=GDP, y = Life.expectancy)) +
+  geom_point()
+
+```
+## 1b
+```{r}
+cor(life_data2$Life.expectancy, life_data2$GDP)
+```
+## 1c
+> Based on the lienar model's correlation calculation of 0.454, and the non-linear points of the scatter plot, a linear model is not appropriate for predicting life.Expectancy using GDP.
+
+
+## 2
+```{r}
+beta_1 <- cor(life_data2$Life.expectancy, life_data2$GDP) * sd(life_data2$Life.expectancy) / sd(life_data2$GDP)
+
+beta_0 <- mean(life_data2$Life.expectancy) - beta_1 * mean(life_data2$GDP)
+
+beta_0
+beta_1
+```
+
+
+## 3
+```{r}
+model_1 <- lm(Life.expectancy~GDP, data = life_data2)
+coef(model_1)
+```
+
+
+## 4a
+```{r}
+X <- cbind(1, life_data2$GDP)
+```
+
+## 4b
+```{r}
+Y <- as.matrix(life_data2$Life.expectancy)
+beta_hat <- solve((t(X) %*% (X)))%*%t(X)%*%Y
+
+beta_hat
+```
+
