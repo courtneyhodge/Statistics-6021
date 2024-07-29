@@ -311,7 +311,7 @@ Starups <- read.csv("C:\\Users\\hodge\\Downloads\\Startups.csv")
 ## Multiple Linear Model
 
 population model:
-$Y = \beta_0 + \beta_1X$
+$Y = \beta_0 + \beta_1X$ +
 
 sample model:
 $Y = \beta_0 + \beta_1\hat{x}$
@@ -319,6 +319,7 @@ $Y = \beta_0 + \beta_1\hat{x}$
 Population Error Terms
 $\varepsilon x_{i} = y_{i} - \hat{y}$
 
+Simple Linear Regression:
 $Y = \beta_0 + \beta_1X + \varepsilon$
 
 
@@ -329,12 +330,12 @@ $Y = \beta_0 + \beta_1\hat{x} + e$
 
 $Y = \beta_0 + \beta_{1} X_{1} + ... + \beta_{p} X_{p} + \varepsilon$
 
-> So, note taht the Y, X and $\beta$ variables actually represent vectors and matrixes, so there's a lot more going on. 
+> So, note that the Y, X and $\beta$ variables actually represent vectors and matrixes, so there's a lot more going on. 
 
 > A design matrix is also the X matrix, so it can change.
 
 ## Parameter Estimation
-How do you estimate the y-intercept ($\beta$) and slope (X)? Here comes los function.
+How do you estimate the y-intercept ($\beta$) and slope (X)? Here comes loss function.
 
 ## Loss Function
 
@@ -770,7 +771,7 @@ summary(model2)
 
 Welp, we are actually getting rid of model 2. Notice that the p-values are changing. This is because the standard errors are decreasing in the summary of the output.
 
-There's a way to automate all of the Bonferroni process. It's Called **STEPWISE REGRESSION**. There's forward selection and backwardselimination. At the beginning of the model, it will start with 1 predictor and apply the Akaike Information Criteria (AIC), which gives a metric that determines if that variable is adding too much noise into the model. If that's the case, it will drop the variable and add another.
+There's a way to automate all of the Bonferroni process. It's Called **STEPWISE REGRESSION**. There's forward selection and backwards elimination. At the beginning of the model, it will start with 1 predictor and apply the Akaike Information Criteria (AIC), which gives a metric that determines if that variable is adding too much noise into the model. If that's the case, it will drop the variable and add another.
 
 ```{r}
 library(MASS)
@@ -790,7 +791,7 @@ added variable plots (avPlot)
 ```{r}
 avPlots(model1)
 ```
-  The partial effect plots shows the slope of the two residuals plot IF R.D.Spend and Asministration are both held fixed.
+  The partial effect plots shows the slope of the two residuals plot IF R.D.Spend and Administration are both held fixed.
 
   The negative slope plot says every time Administration slope goes up 1 dollar, the profit decreases. 
 
