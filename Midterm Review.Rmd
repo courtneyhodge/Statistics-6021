@@ -54,6 +54,14 @@ quantile(bootstrap_means, c(0.025, 0.975))
 ```
 
 ### Testing Hypothesis about Proportions
+Your best friend (whom you know to be really bad at basketball) tells you
+he’s been practicing shooting free throws for the past year. He’s been
+getting some instructions from the best coach in the game and his free
+throw percentage is 85%. You take him to a basketball court and he
+makes 40 out of 100 free throws. Is your friend still a bad basketball
+player? That is, does your friend shoot fewer than 85% of free throws?
+Test at α = 0.01.
+
 
 ```{r}
 prop.test(40, 100, p = 0.85, alternative = "l")
@@ -61,26 +69,35 @@ prop.test(40, 100, p = 0.85, alternative = "l")
 
 #note, whenever your p-val < H0, you say that it is a statistically significant result
 ```
+Based on the p-value = 2.2e-16, and p-value < alpha, we reject that our friend has improved his free-throw percentage and is indeed still bad at basketball.
+
+### Testing Hypothesis about Means
+
 A final project group member tells you that all UVa students sleep for 6
 hours on average. Use students from this class as a random sample. Do
-you believe your classmate - test your conjecture that all UVa students
+you believe your classmate - test your conjecture that all UVA students
 sleep more than 6 hours on average? Test at α = 0.05.
 
 ```{r}
 #default is 2 sided 
 t.test(OurData5$sleep, mu = 6, alternative = "g")
 ```
-> We will reject the null because p val < alpha.
+> We will reject the null that all UVA students on average sleep 6 hours or more a night due to the p-val < alpha being true.
 
+### Comparing Two Proportions
+Click through rate: if a user is shown two adds, which one do they
+click on the most?
 
 ```{r}
 #list the (successes, the sample size)
 #Slide pack 2, pg 8
 prop.test(c(7, 15), c(15, 19))
-#we are 95% confident that the proportion of customers who would select A over B is (-0.694, 0.04)
+
 
 # we can therefore not make a conclusion about this
 ```
+we are 95% confident that the proportion of customers who would select A over B is (-0.694, 0.04). Since our p-value is > 0.05, We can therefore NOT make a conclusion about the effectiveness of the adds and their clickthrough rate. This is also because the confidence interval includes 0, suggesting that the difference between the proportions could be zero, supporting the null hypothesis. 
+
 ```{r}
 nba_data <- read.csv("C:\\Users\\hodge\\Downloads\\nba.csv")
 ```
@@ -104,7 +121,7 @@ nba <- read.csv("C:\\Users\\hodge\\Downloads\\nba.csv")
 > We don't have info on these Population Proportions, but we do have samples Phat Away and Phat Home
 > If the confidence limit is both negative (-,-) (aka Phat A < Phat H ), bot positive (+,+) (aka Phat A > Phat H), you can make a conclusion. 
 
->If (-,+), this is inconclusive.
+>If (-,+), this is inconclusive. Again, because the difference between the two proportions could be zero, supporting a null hypothesis that there is no significant difference between the proportions.
 
 ```{r}
 table(nba$W.L, nba$home_away)
@@ -113,11 +130,11 @@ table(nba$W.L, nba$home_away)
 
 ```{r}
 #first entry are successes, second entry is sample sizes
+#c(successes, sample size)
 prop.test(c(518, 712),c(1230, 1230))
 ```
 
-> from the above, we get 95 percent confidence interval:
- (-0.1975587, -0.1178885), which means that we are 95% confident that the proprotion of wins away is between 19.7% and 11.7% less than the **percentage points** of wins at home
+> from the above, we are 95% confident that the proprotion of wins away is between 19.7% and 11.7% less than the **percentage points** of wins at home
  
 > The above says that we are 95% confident that the winning proportion for **all nba games** played away is between  -0.1975587 and -0.1178885 lower than when the games are played at home.
  
@@ -129,7 +146,7 @@ prop.test(c(712, 518),c(1230, 1230))
 ```
 > The above says that we are 95% confident that the winning proportion for **all nba games** played at home is between  0.1178885 and 0.1975587 higher than when the games are played away.
 
-> This is the same conclusion!
+> This is the same conclusion! Here it is plotted in a stacked barchart
 
 ```{r}
 ggplot(nba, aes(x = home_away, fill = W.L)) +
@@ -150,7 +167,9 @@ t.test(PTS~home_away, data = nba)
 ```
 > NOTE: we are using **t.test when our variable is numerical**. Here, our PTS variable is numerical. In the last example, we used a **proportion test on our categorical variable** for wins or losses (W.L)
 
-> above, we have the difference between the two variables. We see our confidence interval. We are 95% confident that the **average** number of points scored in **all nba games** home games are between 1.155093 and 3.056289 **points** higher than all away games.
+> above, we have the difference between the two variables. We are 95% confident that the **average** number of points scored in **all nba** home **games**are between 1.155093 and 3.056289 **points** higher than all away games.
+
+> realize that you can confirm with the opposite conclusion (refer to example above).
 
 > let's make a box plot
 
@@ -171,6 +190,7 @@ Ourdata <- Classdata <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\
 
 ```
 
+
 ```{r}
 Ourdata2 <- mutate(Ourdata, Age_Diff = as.numeric(gsub("years", "",Age_Diff_Parents), Age_Diff = gsub("year", "",Age_Diff_Parents)))
 ```
@@ -180,11 +200,16 @@ Ourdata2[3,17] <- 1
 ```
 
 ### One Sample t test
+
+When the data is paired, you conduct one sample inference on the paired
+differences. Example:
+• Are fathers older than mothers, on average?
+
 ```{r}
 t.test(Ourdata2$Age_Diff)
 ```
-> With the above, you have mu father - mu mother > 0
-> we are 95% confident that on **average**, all fathers are older by mothers by 2.9 years and 4.5 years.
+> With the above, you have mu father - mu mother > 0 as our alternative hypothesis.
+> we are 95% confident that on **average**, all fathers are older than mothers by an interval estimate of 2.9 years 4.5 years.
 
 ### ANOVA: Comparing More than Two Means
 Analysis of Variance = ANOVA
@@ -201,9 +226,9 @@ Is there a difference in the mean pain level of the patients among the
 H0: MuA = MuB = MuC (No difference in the three drugs)
 HA: At least one of the population means is different.
 
-> The alternative doesn't tell you much, but at least one of the three here is different, says the Alternative Hypothesis.
+> The alternative doesn't tell you much, but it tells us that at least one of the three here are different.
 
-> There's something called a test statistic here, and i'ts called F-test. F-tests measure the variation between the three groups and the variation within the groups. for the three groups, F = MSB/MSW. If the variations = 1, then we don't have evidence to reject the null. If there are huge differences between them, we have evidence to reject the null.
+> There's something called an F-test. F-tests measure the variation between the three groups and the variation within the groups. for the three groups, F = MSB/MSW (mean square between / mean square within). If the variations = 1, then we don't have evidence to reject the null. If there are huge differences between them, we have evidence to reject the null.
 
 ```{r}
 CT <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\Clinical_trial.csv")
@@ -222,13 +247,19 @@ anova <- aov(Pain_Rating~Drug, data = CT)
 anova
 
 ```
+> IN the context of this problem, MSB = 28.22222 (Sum of Squares for Drug) / 2 (Deg. of Freedom for Drug) = 14.11111. MSW = 28.44444 (Sum of Squares for Residuals)/ 24 (Deg of Freedom for Residuals) = 1.1185185. The F-statistic = 14.11111/1.185185 = 11.90476. The large F- statistic suggests that there is a significant difference between group means, indicating that at least one group mean is different from the others.
+
+> Note that a small F-value suggests no signficant difference between group means, indicating that all group means are similar.
+
+> We can also determine to reject or fail to reject the null hypothesis from our p-value. Keep following the example below for an explanation.
+
 ### Variance
 
 > Variance measures the spread. If you take the square root of a variance, you get the standard deviation. Variance is lowercase sigma squared. Before you can find the variance, you'd have to measure how spread out the data is. That is, you have to find the mean, xbar, for the sample. To measure variance, you have to look at how each point deviates from the mean, which is where the loss function comes into play.
 
 > The way data points are represented are x1-xn. If you have multiple means, xbar A, xbar B and xbar C, you have to find the Total Variation, aka sum of squared total (SST)  = Sum of Squared Between + Sum of Squared Within.
 
-> From this, you can follow this formula SST = SSB/(k-1) + SSW/(N-k), where N is the total sum of items from all groups and k is the number of samples. MSB = SSB/(k-1) and MSW = SSW/N-l. F = MSB/MSW, and if this is close to one, we can;t reject the the null hypothesis H0. We have computers, so if the p-value is very small, then we reject the null hypothesis anyways!
+> **From this, you can follow this formula SST = SSB/(k-1) + SSW/(N-k), where N is the total sum of items from all groups and k is the number of samples. MSB = SSB/(k-1) and MSW = SSW/N-l. F = MSB/MSW, and if this is close to one, we can;t reject the the null hypothesis H0. We have computers, so if the p-value is very small, then we reject the null hypothesis anyways!**
 
 > Let's go back to DRUGS!!!
 
@@ -244,7 +275,7 @@ anova
 ```{r}
 summary(anova)
 ```
-> Our p-value is super small. If our percent to check (I forge tthe actual name) is 5%, then the p-val < .05 and we reject the null hypothesis.
+> Our p-value is super small. If our percent to alpha is 5%, then the p-val < .05 and we reject the null hypothesis.
 
 > The important question to answer here is which drug is different. How can we figure this out? We have to further investigate and we enter multiple hypothesis testing.
 
@@ -262,7 +293,7 @@ TukeyHSD(anova, conf.level = 0.95)
 
 > Based on the analysis above, it looks like drug A is the most effective drug in this experiment. we found that by looking at the lower and upper bounds and noticing that A is positive, but C and B are negative.
 
-> We have enough statistical evidence to conclude that the mean pain rating for Drug A is much lower than Drugs B and C. Becuase this is an experiment, Drug A is more effective in treating migraine headaches compared to Drugs B and C
+> We have enough statistical evidence to conclude that the mean pain rating for Drug A is much lower than Drugs B and C. Becuase this is an experiment, Drug A is more effective in treating all migraine headaches compared to Drugs B and C
 
 ```{r}
 plot(TukeyHSD(anova, conf.level = 0.95))
