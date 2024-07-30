@@ -1,0 +1,176 @@
+---
+title: "Stats Notebook - Post Exam"
+author: "Courtney Hodge"
+date: "2024-07-30"
+output: html_document
+---
+```{r}
+insurance <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\insurance.csv")
+```
+
+```{r}
+view(insurance)
+```
+
+```{r}
+modl <- lm(charges~smoker, data=insurance)
+
+summary(modl)
+```
+
+```{r}
+t.test(charges~smoker,data= insurance)
+```
+
+```{r}
+new <- data.frame(smoker="yes")
+predict(modl, new)
+```
+
+```{r}
+mod2 <- lm(charges~region, data = insurance)
+summary(mod2)
+```
+```{r}
+insurance$region <-factor(insurance$region, levels = c("southeast", "northeast", "northwest", "southwest"))
+```
+
+```{r}
+insurance$region2 <-factor(insurance$region, levels = c("southeast", "northeast", "northwest", "southwest"))
+
+mod3 <- lm(charges~region2, data = insurance)
+summary(mod3)
+```
+
+```{r}
+anov <- aov(charges~region, data = insurance)
+```
+
+
+> why are we doing all of this work? For the ANOVA test in this case, it is telling us that at the 5% level, we can go ahead and reject the null, meaning at least one of these means are different. What after? Tukey comparison to see which one is really different.
+
+```{r}
+TukeyHSD(anov)
+```
+> At least we can see which of theintervals are both negative. Southwest tells us that on average, southwest is lover than southeast.
+
+>Now, we are going back to smoker, but we are using age. Let's make a boxplot before we start to build the model. Here, age is our predictor.
+
+```{r}
+library(ggplot2)
+ggplot(insurance, aes(x = age, y = charges)) + geom_jitter()
+```
+> IF we fit the model above, do you think it will be agood model? The answer is no.
+
+```{r}
+library(ggplot2)
+ggplot(insurance, aes(x = age, y = charges)) + geom_jitter() + geom_smooth(method = "lm", se = F)
+```
+
+> we can see that the line is actually trying to do the middle of smoker charges instead of non-smoker charges.
+
+> we are going to color the dots based on the smoker status. Now, we can see what's really going on and this is why **data exploration is important**. All the outliers, the high charges, on average, cooresponds to smokers.
+
+```{r}
+library(ggplot2)
+ggplot(insurance, aes(x = age, y = charges, color = smoker)) + geom_point()
+```
+
+```{r}
+library(ggplot2)
+ggplot(insurance, aes(x = age, y = charges, color = smoker)) + geom_jitter() + geom_smooth(method = "lm", aes(group = smoker))
+```
+> now, we have two lines. one that makes a predictor for smokers and one that makes a predictor for non-smokers. Before we build the model, we will have an indicator function that fits the model.
+
+```{r}
+mod4<- lm(charges~age + smoker, data = insurance)
+summary(mod4)
+```
+
+> in terms of an equation, what does this model look like? So, in terms of non-smokers, for every you that you grow, you pay $274.87 more dollars in your insurance plan. For smokeryes, every time you move from being a smoker to non smoker, your health insurance moves to 23855.30 at age 0.
+
+## Using Dummy Variables to capture Interactions Between Explanatory Variables
+
+```{r}
+mod5 <- lm(charges~age * smoker, data = insurance)
+summary(mod5)
+```
+> Every time your age incrases by 1, your smokers will increase by 267.25 + 37.99.
+
+```{r}
+ggplot(insurance, aes(x = age, y = charges, color = smoker)) + geom_jitter() + geom_smooth(method = "lm", model.extract(mod5), se = F)
+```
+
+```{r}
+new_dat <- data.frame(age=26, smoker = "no")
+predict(mod5, new_dat,interval = "prediction")
+```
+
+> for a particular person, Disha, her insurance cost will be within $-7700.646 $17414.75 thousands of dollars.
+
+## building a model with everything
+```{r}
+ins <- insurance[,-8]
+ins
+```
+
+```{r}
+mod10 <- lm(charges~., data = ins)
+summary(mod10)
+```
+> the residual standard error meausres how well we are going to do. This model will error in health care coverage by about $6,062 dolalrs. SSE (sum of squared error) from the population model. MSE = SSE/(n-p-1) is the residual standard error. 
+> SSE/n
+
+## Outliers
+
+> leverage points, influential points, outliers
+> how do you use your model to get rid of some of these variables if they are presenting a big change to our model
+
+> Outlier: Outliers are data points with the largest residuals. Detection:
+
+1. Scatterplot
+2. Residual Plot
+3. Standardized Residuals: Residuals divided by their estimated standard deviation.
+
+> An outlier can be an x-outlier (when predictor variable has an unusual value) or a y-outlier (when residual variable has an unusual value). 
+
+>Treating Outliers: 
+1. Transform response
+2. Consider context and subject matter knowledge
+3. Measurement error>
+4. Winsorize: Replace extreme valeus with the nearest values that are not outliers. For ex., replace valeues about the 95th percentile with the value at the 95th percentile
+5. Trim/revmove point (last resort)
+6. Use other techniques like quantile regression or Random Forest which are resistant to outliers.
+
+> Leverage Points: dat apoints that hvae **extreme values** for a predictor variable. These points have a large influence on the fitted values of the model, but not necessarily on the regression coefficients themselves.
+>Detection:
+1. Leverage values are in the diagonals of the Hat matrix:(X^TX)^-1(X^T)
+2. High leverage points are identified by leverage values greater than 2(p+1)/n, wher p is the number of predictors and 
+
+>Treating High Leverage Points
+1. Transform predicor
+2. COnsider context and subject matter knowledge
+.
+.
+.
+
+> Influential Points
+>influential points : data points that have a disproportionately large impact on the regression model's coefficients and fitted values. 
+> Detection: Cook's Distance: One common measure to identify influential points in Cook's distance. IF a point has a Cook's distance signficantly larger than others, it is condsidered influential.
+
+```{r}
+install.packages("broom")
+```
+
+```{r}
+library(broom)
+library(dplyr)
+dat_ins <- mod5 |> augment(ins)
+```
+
+```{r}
+filter(dat_ins, .std.resid > 2)
+
+```
+
+> according to this data and this metric, all these points, 74 observations will not meet this criteria.

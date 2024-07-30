@@ -423,7 +423,7 @@ ggplot(Startups, aes(x=R.D.Spend, y = Profit)) +
   geom_point() +
   geom_smooth(method = "lm", se = F)
 ```
-Here, we can find the y-intercept of the line and the cooresponding slope coefficient of each line
+Here, we can find the y-intercept of the line and the corresponding slope coefficient of each line
 
 ```{r}
 model_1 <- lm(Profit~R.D.Spend, data = Startups)
@@ -722,6 +722,7 @@ ggcorrplot(cor_matrix, lab = T)
 ```
 
   Tolerance - the tolerance measures the influence of one predictor variable on all other predictor vairables. TOlerance is defined as T=1-R^2 for the first step regression analysis. If T<0.1 there might be multicollinearity issues and with T <0.01 there certainly is multicolinearity.
+
 
 ```{r}
 model10 <- lm(Profit~R.D.Spend + Administration + Marketing.Spend, data = Startups)
