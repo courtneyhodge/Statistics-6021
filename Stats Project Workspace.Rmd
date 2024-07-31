@@ -1,0 +1,15 @@
+---
+title: "Stats Project Workspace"
+author: "Courtney Hodge"
+date: "2024-07-29"
+output: html_document
+---
+```{r}
+#file.choose()
+#file.choose()
+```
+
+```{r}
+data <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\(original) Billionaires Statistics Dataset.csv")
+```
+

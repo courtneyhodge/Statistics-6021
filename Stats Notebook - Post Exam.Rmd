@@ -4,12 +4,15 @@ author: "Courtney Hodge"
 date: "2024-07-30"
 output: html_document
 ---
+
+7/30/24 Class
+
 ```{r}
 insurance <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\insurance.csv")
 ```
 
 ```{r}
-view(insurance)
+#view(insurance)
 ```
 
 ```{r}
@@ -111,7 +114,6 @@ predict(mod5, new_dat,interval = "prediction")
 ## building a model with everything
 ```{r}
 ins <- insurance[,-8]
-ins
 ```
 
 ```{r}
@@ -154,12 +156,12 @@ summary(mod10)
 .
 .
 
-> Influential Points
+## Influential Points
 >influential points : data points that have a disproportionately large impact on the regression model's coefficients and fitted values. 
 > Detection: Cook's Distance: One common measure to identify influential points in Cook's distance. IF a point has a Cook's distance signficantly larger than others, it is condsidered influential.
 
 ```{r}
-install.packages("broom")
+#install.packages("broom")
 ```
 
 ```{r}
@@ -174,3 +176,109 @@ filter(dat_ins, .std.resid > 2)
 ```
 
 > according to this data and this metric, all these points, 74 observations will not meet this criteria.
+
+7/31/24 
+
+```{r}
+library(tidyverse)
+library(broom)
+```
+> we will build a model w/ all the variables and then decide which ones we'll drop
+
+```{r}
+model1<-lm(charges~., data = insurance)
+summary(model1)
+```
+> we use augment to get our predictions (.fitted), our actual charges, all our residuals (.resid), all of our leverages (.hat), and our cook distance (.cooksd), and one for all of our outliers (.std.resid)
+
+```{r}
+diagnostics <- model1 |> augment(data = insurance)
+```
+
+> we will filter our dataset to look at any outliers outside 3. we are going to get this our and have a dataset of all outliers
+> for all observations that meet this restriction, we will call it an outlier
+
+```{r}
+outliers <- filter(diagnostics, abs(.std.resid) > 3)
+
+```
+
+> same thing for leverage (.hat). Let's create 
+
+```{r}
+leverage <- filter(diagnostics, .hat>2*(6 + 1)/nrow(insurance))
+```
+
+> same for influence (.cooksd), let's find our outliers 
+
+```{r}
+influence <- filter(diagnostics, .cooksd>4 / nrow(insurance))
+
+#view(insurance)
+```
+
+> Now, we will address how our model will do when we have other things affecting it? within this dataset, our model is great, but with new values, how will this change
+
+## Model Complexity, Overfitting/Underfitting
+
+* Model complexity refers to the sophistication of flexibility of a model in capturing relationships between predictors and the response variable. In simple terms, it reflects how intricate the model is in representing the underlying patterns in the data
+
+* Underfitting/Overfitting: model complexity is a crucial consideration in machine learning because overly simple models may underfit the data, failing to capture important patterns, while overly complex models may overfit the data, capturing noise instead of true underflying relationships. Achieving the right balance of complexity is essential for building modeles that generalize well to unseen data
+
+Solutions:
+
+1. Bootstrapping
+2. Train-Test Split
+3. Cross-Validation
+4. Regularization
+
+Model Performance Metrics:
+
+There are several ways to measure the performance of a predictive model. For linear models, metrics include
+* R^2 and Adjusted R^2
+* Root Mean Squared Error (RMSE)
+* Mean Absolute Error (MAE)
+
+WHY ARE WE DOING THIS?
+* If we have two different models (one with charges~. and one with charge~ (everything but sex)), we want the smallest RMSE. Let's write some code to do this in a simple case.
+
+> Train Test Split Example
+
+* Remember, this is without replacement!!!!
+
+```{r}
+#make sure to specify the split size
+#80% of 1338 is not a descrete (whole) number. Make sure to use floor or ceiling functions
+split <- sample(1:nrow(insurance), size = floor(0.8*nrow(insurance)))
+
+
+train_data <-insurance[split,]
+test_data <- insurance[-split, ]
+```
+
+> now that we have the test and train, we will build our model
+
+```{r}
+model2 <- lm(charges~age + bmi + children + smoker + region, data = train_data)
+
+summary(model2)
+```
+> **NOW, let's see how good our model is**
+
+```{r}
+#(new data, test data)
+predictions <- predict(model2, test_data)
+
+#Root Mean Squared Error
+rmse <- sqrt(mean((predictions - test_data$charges) ^ 2))
+
+rmse
+```
+
+```{r}
+#we could also just call the RMSE function
+#RMSE(predictions, test_data$charges)
+
+#^ there's an error, so be careful
+```
+> If we wanted to find the MAE, we could just take the absolute value of (ysubi - ysubi hat)
