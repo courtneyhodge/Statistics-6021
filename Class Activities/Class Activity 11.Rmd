@@ -1,0 +1,109 @@
+---
+title: "Class Activity 11"
+author: "Courtney Hodge"
+date: "2024-08-02"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+life_data <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\expectancy.csv")
+
+```
+
+```{r}
+df <-select(life_data,Life.expectancy, Status, Adult.Mortality,
+infant.deaths,HIV.AIDS,BMI, GDP,Schooling)%>%
+na.omit()
+```
+
+# 1
+
+```{r}
+model <- lm(Life.expectancy~., data = df)
+#summary(model)
+
+aic <- MASS::stepAIC(model, direction = "both", Trace = F)
+summary(aic)
+```
+> Since the p-val for StatusDeveloping is < 0.05, we are going to run the model again without StatusDeveloping.
+
+```{r}
+model2 <- lm(Life.expectancy~.-Status, data = df)
+```
+
+```{r}
+aic2 <- MASS::stepAIC(model2, direction = "both", Trace = F)
+summary(aic2)
+```
+> based on the step aic result above, a "good" model would be 
+
+```{r}
+model2 <- lm(Life.expectancy~Adult.Mortality + HIV.AIDS + GDP + 
+    Schooling, data = df)
+```
+
+> the adjusted R^2 of our model is 0.8367
+
+```{r}
+car::vif(model2)
+```
+> since the VIFs for each predictor is under 10, we can feel good about this model.
+
+# 2 
+
+## a
+```{r}
+library(glmnet)
+design_matrix <- model.matrix(Life.expectancy~0+., data = df)
+#View(design_matrix)
+
+response_var <- df$Life.expectancy
+
+ridgemodel <- glmnet(x = design_matrix, y = response_var, alpha = 0) #specifies that we are doing Ridge Regression!!!!!
+```
+
+## b 
+```{r}
+kcvglmnet <- cv.glmnet(x = design_matrix, y = response_var, alpha = 0, nfolds = 10) #typically, you want to do more than 2
+
+kcvglmnet$lambda.1se
+```
+
+
+## c
+
+```{r}
+plot(ridgemodel, label = T, xvar = "lambda") + abline(v = log(kcvglmnet$lambda.1se))
+
+```
+
+## 2d
+
+> Compared to my model in Question 1, my ridge regression model found that the status (developed and devoping), HIV.AIDS, and schooling predictors were best for predicting Life.expectancy. In Question 1, the linear model found with step aic that Adult.Mortality + HIV.AIDS + GDP + Schooling were best, instead choosing Adult.Mortality and GDP over status.
+
+# 3
+
+## a
+
+```{r}
+lassomodel <- glmnet(x = design_matrix, y = response_var, alpha = 1) #lass regression model
+```
+
+## b
+
+```{r}
+kcvglmnet <- cv.glmnet(x = design_matrix, y = response_var, alpha = 1, nfolds = 10)
+```
+
+## c
+
+```{r}
+plot(lassomodel, label = T, xvar = "lambda") + abline(v = log(kcvglmnet$lambda.1se))
+```
+## d
+
+> the lasso model picked HIV.AIDS, and Schooling as the predictors for predicting Life.expectancy.

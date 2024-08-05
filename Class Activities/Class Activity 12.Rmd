@@ -1,0 +1,74 @@
+---
+title: "Class Activity 12"
+author: "Courtney Hodge"
+date: "2024-08-05"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(pls)
+```
+
+
+```{r}
+baseball <- read.csv( "C:\\Users\\hodge\\Downloads\\Baseball.csv")
+```
+
+
+```{r}
+baseball <- na.omit(baseball)
+```
+
+
+## 1a
+> in comparison to OLS, PCR lowers the risk of multicolinearity within our model and it shrinks the the # of columns to containt the same information as the *p* numerical random variable, but explained in a more convenient way.
+
+## 1b
+
+```{r}
+colnames(baseball)
+```
+```{r}
+baseball_subset <- subset(baseball, select = -c(X, League, Division, NewLeague))
+
+pca <- princomp(baseball_subset, fix_sign = T, cor = T)
+
+summary(pca)
+```
+```{r}
+biplot(pca)
+```
+
+
+## 1c
+
+PCRRRRR
+```{r}
+pcareg <-pcr(Salary~., data = baseball_subset, scale = T, ) #does principal component regression
+
+```
+## 1d
+
+>based on the model summary below, the R^2 if we used the first 3 principal components looks to be 41.93, and the R^2 if we used the first 10 principal components is 45.67.
+
+```{r}
+summary(pcareg)
+```
+## 1e
+
+> The salary prediction for the first two rows of the dataset using the first 3 principal components is 509.4619 for the 2nd row and 634.2457 for the third row.
+
+```{r}
+new_dat = baseball_subset[1:2, ]
+predict(pcareg, new_dat, ncomp = 3)
+```
+
+> and with the first 10 principal components, we have salary predictions of 507.9765 for the 2nd row and 763.0485 for the 3rd row.
+
+```{r}
+new_dat = baseball_subset[1:2, ]
+predict(pcareg, new_dat, ncomp = 10)
+```
+
+# 2

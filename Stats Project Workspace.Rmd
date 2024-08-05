@@ -5,11 +5,22 @@ date: "2024-07-29"
 output: html_document
 ---
 ```{r}
-#file.choose()
-#file.choose()
+library(tidyverse)
 ```
 
 ```{r}
 data <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\(original) Billionaires Statistics Dataset.csv")
+```
+
+```{r}
+
+sum(is.na(data$birthMonth))
+
+```
+
+```{r}
+data <- data |> drop_na(birthMonth)
+
+data <- data |> mutate(data, )
 ```
 

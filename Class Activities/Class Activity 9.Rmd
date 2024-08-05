@@ -4,4 +4,76 @@ author: "Courtney Hodge"
 date: "2024-07-31"
 output: html_document
 ---
+```{r}
+library(tidyverse)
+```
 
+
+```{r}
+startups <- read.csv("C:\\Users\\hodge\\Desktop\\UVA_Coding_Folder\\Statistics-6021\\Startups.csv")
+```
+
+# 1
+
+```{r}
+model1 <- lm(Profit~ State, data = startups)
+summary(model1)
+```
+
+> The model is: 
+
+$\hat{Profit} = 103905 + (14869 * StateFlorida) + (9851 * StateNew York)$
+
+# 2
+```{r}
+model2 <- lm(Profit~State + R.D.Spend, data = startups)
+summary(model2)
+```
+# 2a
+* Explore the three variables in a visualization. Also, superimpose a linear regression
+line predicting Profit based on R.D.Spend. for each State.
+```{r}
+ggplot(startups, aes(x = Profit, y = R.D.Spend, color = State)) + geom_jitter() + geom_smooth(method = "lm", model.extract(model2), se = F)
+```
+
+# 2b
+* write down the model
+
+> The model is: 
+
+$\hat{Profit} =  4.875e+04 + (1.164e+03 * StateFlorida) + (9.597e+00 * StateNew York) + (8.530e-01*R.D.Spend) $
+
+# 2c
+
+The coefficient of StateFlorida in this context is   1.164e+03 more than the California Baseline of 4.875e+04 when R.D.Spend is included in the model. 
+
+# 3
+```{r}
+model3 <- lm(Profit~State * R.D.Spend, data = startups) 
+summary(model3)
+```
+
+# 3a
+
+$\hat{Profit} =  4.388e+04 + (9.242e+03 * StateFlorida x -1.151e-01) + (7.921e+03 * StateNew York x -1.153e-01)$
+
+# 3b 
+
+When the company is in Florida, the effect of R.D. spend on Profit is reduced 1.151e-01 times on average, and when the company is in New York, the effect of R.D.Spend on Profit is reduced 1.153e-01 times on average.
+
+# 4
+
+```{r}
+startups$State2<-factor(startups$State, levels = c("New York", "California", "Florida"))
+
+mod4 <- lm(Profit~State2, data = startups)
+summary(mod4)
+```
+
+```{r}
+startups$State3<-factor(startups$State, levels = c("Florida", "California", "New York"))
+
+mod5 <- lm(Profit~State3, data = startups)
+summary(mod5)
+```
+State is not a useful predictor based on the p-values. When we change the reference category for state, it still remains not significant, therefore, the predictor category for State is not useful.
