@@ -70,5 +70,6 @@ predict(pcareg, new_dat, ncomp = 3)
 new_dat = baseball_subset[1:2, ]
 predict(pcareg, new_dat, ncomp = 10)
 ```
+## 2
 
-# 2
+> some advantages for using a Lasso regression instead of PCR are the feature selection that automatically selects the most important features in a dataset. PCR considers all input predictors.

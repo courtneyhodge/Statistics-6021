@@ -712,13 +712,35 @@ Look at the AIC here. The lower the AIC value, the better. This helps make sure 
 install.packages(MLR)
 #library(MLR)libra"mlr"ry(MLR)
 #need the caret library for this
-logit_model4 <- train(W.L~.-win-PTS, nba2, method = "glm", family = "binomial")
-summary(logit_model4)
+#logit_model4 <- train(W.L~.-win-PTS, nba2, method = "glm", family = "binomial")
+#summary(logit_model4)
 ```
 
 ```{r}
 aic <- MASS::stepAIC(logit_model1, direction = "both", trace = FALSE)
 summary(aic)
 ```
+> or in caret you can use the train() function to get the same thing
+
+```{r}
+#logit_aic <- train(W.L~.-win-PTS, nba2, method= "glmStepAIC", family = "binomial", trace = FALSE)
+#summary(logit_aic)
+```
 
 
+> note that same resutls to logit_model 3 and 4
+
+```{r}
+#logit_model5 <- train(W.L~.-win+PTS*home_away, nba2, method= "glm", family = "binomial")
+#summary(logit_model5)
+```
+
+> let's check for multicolinearity ot make compliment the corplot
+
+```{r}
+car::vif(logit_model3)
+```
+
+> all vif values are all less than 5, so no multicolinearity!
+
+> 
